@@ -1,10 +1,10 @@
 ---
-title: "Writing a great story for data science projects - Spring 2026 "
+title: "Survival Differences by Tumor Stage in Breast Cancer: A Cox Proportional Hazards Analysis Using Real‑World Data"
 subtitle: "This is a Report Template Quarto"
-author: "Student Name (Advisor: Dr. Cohen)"
+author: "Victoria Nguyen & Julaxis Love"
 date: '`r Sys.Date()`'
 format:
-  html:
+  html: 
     code-fold: true
 course: Capstone Projects in Data Science
 bibliography: references.bib # file contains bibtex for references
@@ -66,7 +66,9 @@ to add more work...*
 
 Cite new paper [@su2012linear]
 
-Classification of Knee OA was studied here [@guida2021knee]
+The paper reviews breast cancer, summarizing its molecular subtypes, risk factors, and current and emerging treatments. It is important because breast cancer is highly heterogeneous and a leading cause of death in women, making early detection and personalized therapy critical. The writers address this by analyzing recent research, including molecular profiling, biomarkers, and AI-assisted diagnostics. Key findings highlight precision medicine approaches, targeted therapies, and advances in diagnosis, though clinical implementation and data gaps remain challenges. Future directions focus on integrating new technologies and personalized strategies to improve patient outcomes. [@Lukasiewicz2021BreastCancer]
+
+This article provides an updated overview of breast cancer, covering its causes, risk factors, molecular subtypes, and treatment options. Breast cancer is a leading cause of cancer in women, and its diversity makes early detection and tailored treatment essential. The authors summarize current knowledge on diagnostics, prognostic markers, and therapies like surgery, chemotherapy, hormonal, and targeted treatments. They emphasize that outcomes depend on tumor subtype and stage, while noting that research gaps remain and further studies are needed to improve personalized care. [@Xiong2025BreastCancer]
 
 ## Methods
 
