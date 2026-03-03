@@ -3,7 +3,7 @@ title: "Survival Differences by Tumor Stage in Breast Cancer: A Cox Proportional
 author: "Victoria Nguyen & Julaxis Love"
 date: "`r Sys.Date()`"
 
-format:
+format: 
   html:
     code-fold: true
     self-contained: true
