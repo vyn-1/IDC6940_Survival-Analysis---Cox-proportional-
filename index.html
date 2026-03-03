@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Victoria Nguyen &amp; Julaxis Love">
-<meta name="dcterms.date" content="2026-02-20">
+<meta name="dcterms.date" content="2026-03-02">
 
-<title>Survival Differences by Tumor Stage in Breast Cancer: A Cox Proportional Hazards Analysis Using Real‑World Data</title>
+<title>Survival Differences by Tumor Stage in Breast Cancer: A Cox Proportional Hazards Analysis Using Real-World Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,26 +22,40 @@ width: 0.8em;
 margin: 0 0.8em 0.2em -1em;  vertical-align: middle;
 }
 
-div.csl-bib-body { }
-div.csl-entry {
-clear: both;
-margin-bottom: 0em;
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
-.hanging-indent div.csl-entry {
-margin-left:2em;
-text-indent:-2em;
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
-div.csl-left-margin {
-min-width:2em;
-float:left;
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
 }
-div.csl-right-inline {
-margin-left:2em;
-padding-left:1em;
+pre.numberSource { margin-left: 3em; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-div.csl-indent {
-margin-left: 2em;
-}</style>
+</style>
 
 
 <script>/*!
@@ -3072,8 +3086,7 @@ vertical-align: -.125em;
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Survival Differences by Tumor Stage in Breast Cancer: A Cox Proportional Hazards Analysis Using Real‑World Data</h1>
-<p class="subtitle lead">This is a Report Template Quarto</p>
+<h1 class="title">Survival Differences by Tumor Stage in Breast Cancer: A Cox Proportional Hazards Analysis Using Real-World Data</h1>
 </div>
 
 
@@ -3090,7 +3103,7 @@ vertical-align: -.125em;
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 20, 2026</p>
+      <p class="date">March 2, 2026</p>
     </div>
   </div>
   
@@ -3102,63 +3115,223 @@ vertical-align: -.125em;
 </header>
 
 
-<p>Slides: <a href="slides.html" target="_blank">slides.html</a> ( Go to <code>slides.qmd</code> to edit)</p>
+<p>Slides: <a href="slides.html" target="_blank">slides.html</a><br>
+(Edit <code>slides.qmd</code> to modify presentation slides.)</p>
+<hr>
 <section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Breast cancer is a major global health challenge, affecting millions of women and remaining one of the leading causes of cancer-related death. Although advances in screening, diagnosis, and treatment have improved survival for many patients, outcomes continue to vary widely. This variation is largely due to the heterogeneous nature of breast cancer, which differs across molecular subtypes, risk factors, and disease progression patterns <span class="citation" data-cites="Lukasiewicz2021BreastCancer Xiong2025BreastCancer">(<a href="#ref-Lukasiewicz2021BreastCancer" role="doc-biblioref">Łukasiewicz et al. 2021</a>; <a href="#ref-Xiong2025BreastCancer" role="doc-biblioref">Xiong et al. 2025</a>)</span>. As a result, early detection and personalized treatment strategies are critical for improving patient outcomes.</p>
-<p>Recent literature highlights significant progress in understanding breast cancer biology, including the identification of molecular subtypes, prognostic biomarkers, and targeted therapies. Advances in molecular profiling and emerging tools such as AI-assisted diagnostics have improved the ability to tailor treatment to individual patients <span class="citation" data-cites="Lukasiewicz2021BreastCancer">(<a href="#ref-Lukasiewicz2021BreastCancer" role="doc-biblioref">Łukasiewicz et al. 2021</a>)</span>. However, despite these innovations, tumor stage at diagnosis remains one of the most influential predictors of survival and continues to play a central role in clinical decision-making <span class="citation" data-cites="Xiong2025BreastCancer">(<a href="#ref-Xiong2025BreastCancer" role="doc-biblioref">Xiong et al. 2025</a>)</span>.</p>
-<p>Understanding how tumor stage affects survival is therefore essential for both clinicians and patients. Survival analysis offers a robust framework for evaluating time-to-event outcomes while accounting for censored observations and varying follow-up times. Methods such as Kaplan–Meier survival curves and Cox proportional hazards models are widely used to examine survival patterns and assess the impact of clinical factors on patient prognosis.</p>
-<p>Building on prior research, this study addresses the question: Does tumor stage at diagnosis influence survival time in breast cancer patients? We hypothesize that higher tumor stages are associated with shorter survival times. By examining this relationship, the study aims to reinforce the importance of early detection and accurate staging, while contributing evidence that supports personalized and stage-informed approaches to breast cancer care.</p>
-<p>We will be using this data set for our project.=: https://www.kaggle.com/datasets/reihanenamdari/breast-cancer</p>
+<h2 class="anchored" data-anchor-id="introduction">1. Introduction</h2>
+<p>Breast cancer remains one of the most significant global health challenges and continues to rank among the leading causes of cancer-related mortality worldwide. Although advances in screening, diagnostic imaging, molecular profiling, and targeted therapies have substantially improved detection and treatment, survival outcomes still vary considerably across patients.</p>
+<p>This variation reflects the heterogeneous nature of breast cancer, which differs in molecular subtype, biological aggressiveness, and patterns of disease progression. While innovations such as genomic assays and AI-assisted diagnostics have enhanced personalized treatment planning, traditional clinical indicators—particularly tumor stage at diagnosis—remain among the strongest predictors of survival.</p>
+<p>Because tumor stage reflects the extent of disease spread at diagnosis, understanding its relationship with survival is critical for clinical decision-making and patient counseling.</p>
+<p>This study investigates whether AJCC 6th Edition tumor stage is associated with overall survival time in breast cancer patients.</p>
+<p><strong>Hypothesis:</strong> Higher tumor stages are associated with shorter survival times.</p>
+<hr>
 </section>
-<section id="methods" class="level2">
-<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<section id="overview-of-ajcc-6th-edition-breast-cancer-staging" class="level2">
+<h2 class="anchored" data-anchor-id="overview-of-ajcc-6th-edition-breast-cancer-staging">1.1 Overview of AJCC 6th Edition Breast Cancer Staging</h2>
+<p>The AJCC 6th edition staging system classifies breast cancer using:</p>
 <ul>
-<li><p>Detail the models or algorithms used.</p></li>
-<li><p>Justify your choices based on the problem and data.</p></li>
+<li><strong>T</strong> – Tumor size<br>
+</li>
+<li><strong>N</strong> – Regional lymph node involvement<br>
+</li>
+<li><strong>M</strong> – Presence of distant metastasis</li>
+</ul>
+<p>These components are combined to assign an overall stage from I to IV.</p>
+<section id="stage-i" class="level3">
+<h3 class="anchored" data-anchor-id="stage-i">Stage I</h3>
+<p>Localized tumors (≤ 2 cm) with minimal or no lymph node involvement.<br>
+Typically associated with excellent survival outcomes.</p>
+</section>
+<section id="stage-ii" class="level3">
+<h3 class="anchored" data-anchor-id="stage-ii">Stage II</h3>
+<p>Larger tumors and/or limited regional lymph node involvement.<br>
+Generally favorable survival but more variable than Stage I.</p>
+</section>
+<section id="stage-iii" class="level3">
+<h3 class="anchored" data-anchor-id="stage-iii">Stage III</h3>
+<p>Locally advanced disease involving multiple lymph nodes or adjacent structures.<br>
+Significantly lower survival compared to Stages I and II.</p>
+</section>
+<section id="stage-iv" class="level3">
+<h3 class="anchored" data-anchor-id="stage-iv">Stage IV</h3>
+<p>Metastatic disease involving distant organs (e.g., bone, liver, lung, brain).<br>
+Associated with substantially poorer survival outcomes.</p>
+<p>Because stage at diagnosis strongly predicts prognosis, it serves as the primary predictor in this survival analysis.</p>
+<hr>
+</section>
+</section>
+<section id="tumor-differentiation" class="level2">
+<h2 class="anchored" data-anchor-id="tumor-differentiation">1.2 Tumor Differentiation</h2>
+<p>Tumor differentiation describes how closely cancer cells resemble normal breast tissue under microscopic examination.</p>
+<ul>
+<li><strong>Well-differentiated</strong>: Resemble normal cells; slower growth.</li>
+<li><strong>Moderately differentiated</strong>: Intermediate characteristics.</li>
+<li><strong>Poorly differentiated</strong>: Highly abnormal; more aggressive behavior.</li>
+</ul>
+<p>Differentiation is closely related to tumor grade and provides additional biological context beyond anatomical staging. Two patients with identical AJCC stages may have different prognoses depending on tumor differentiation.</p>
+<p>Including differentiation as a covariate allows for a more comprehensive survival analysis.</p>
+<hr>
+</section>
+<section id="methods" class="level1">
+<h1>2. Methods</h1>
+<p>This project evaluates the relationship between AJCC 6th edition stage and overall survival using survival analysis techniques.</p>
+<p>Survival analysis is appropriate when: - The outcome is time-to-event. - Some observations are censored. - Follow-up time varies across individuals.</p>
+<hr>
+<section id="survival-function-and-kaplanmeier-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="survival-function-and-kaplanmeier-estimation">2.1 Survival Function and Kaplan–Meier Estimation</h2>
+<p>The survival function ( S(t) ) represents the probability of surviving beyond time ( t ).</p>
+<p>The Kaplan–Meier estimator is:</p>
+<p>[ (t) = _{t_i t} (1 - ) ]</p>
+<p>Where: - ( t_i ) = event times<br>
+- ( d_i ) = number of deaths at time ( t_i )<br>
+- ( n_i ) = individuals at risk just before ( t_i )</p>
+<p>Kaplan–Meier curves visually compare survival distributions across stages.</p>
+<p>The <strong>log-rank test</strong> evaluates whether survival curves differ significantly.</p>
+<hr>
+</section>
+<section id="cox-proportional-hazards-model" class="level2">
+<h2 class="anchored" data-anchor-id="cox-proportional-hazards-model">2.2 Cox Proportional Hazards Model</h2>
+<p>To adjust for covariates, a Cox proportional hazards model was used:</p>
+<p>[ h(t|X) = h_0(t)(_1X_1 + _2X_2 + + _pX_p) ]</p>
+<p>Where: - ( h_0(t) ) = baseline hazard<br>
+- ( X ) = predictor variables<br>
+- ( e^{} ) = hazard ratio</p>
+<p>Interpretation: - HR &gt; 1 → Increased risk<br>
+- HR &lt; 1 → Decreased risk</p>
+<hr>
+</section>
+<section id="dataset-and-variables" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-and-variables">2.3 Dataset and Variables</h2>
+<p>This study uses a publicly available Breast Cancer real-world dataset.</p>
+<section id="outcome-variables" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-variables">Outcome Variables</h3>
+<ul>
+<li><strong>Survival Months</strong> – Time from diagnosis to death or last follow-up<br>
+</li>
+<li><strong>Status</strong> – 1 = death, 0 = censored</li>
 </ul>
 </section>
-<section id="analysis-and-results" class="level2">
-<h2 class="anchored" data-anchor-id="analysis-and-results">Analysis and Results</h2>
-<section id="data-exploration-and-visualization" class="level3">
-<h3 class="anchored" data-anchor-id="data-exploration-and-visualization">Data Exploration and Visualization</h3>
+<section id="primary-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="primary-predictor">Primary Predictor</h3>
 <ul>
-<li><p>Describe your data sources and collection process.</p></li>
-<li><p>Present initial findings and insights through visualizations.</p></li>
-<li><p>Highlight unexpected patterns or anomalies.</p></li>
-</ul>
-<p>```</p>
-</section>
-<section id="modeling-and-results" class="level3">
-<h3 class="anchored" data-anchor-id="modeling-and-results">Modeling and Results</h3>
-<ul>
-<li><p>Explain your data preprocessing and cleaning steps.</p></li>
-<li><p>Present your key findings in a clear and concise manner.</p></li>
-<li><p>Use visuals to support your claims.</p></li>
-<li><p><strong>Tell a story about what the data reveals.</strong></p></li>
+<li><strong>AJCC 6th Edition Stage (I–IV)</strong></li>
 </ul>
 </section>
-<section id="conclusion" class="level3">
-<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<section id="covariates" class="level3">
+<h3 class="anchored" data-anchor-id="covariates">Covariates</h3>
 <ul>
-<li><p>Summarize your key findings.</p></li>
-<li><p>Discuss the implications of your results.</p></li>
+<li>Age<br>
+</li>
+<li>Race<br>
+</li>
+<li>Differentiation<br>
+</li>
+<li>Tumor Size</li>
+</ul>
+<p>Patients missing required survival or staging data were excluded.</p>
+<hr>
+</section>
+</section>
+<section id="analytical-steps" class="level2">
+<h2 class="anchored" data-anchor-id="analytical-steps">2.4 Analytical Steps</h2>
+<ol type="1">
+<li>Create survival object using <code>Surv()</code></li>
+<li>Fit Kaplan–Meier curves using <code>survfit()</code></li>
+<li>Compare curves with <code>survdiff()</code></li>
+<li>Fit Cox model using <code>coxph()</code></li>
+<li>Extract hazard ratios and 95% CIs</li>
+<li>Test proportional hazards using <code>cox.zph()</code></li>
+</ol>
+<hr>
+</section>
+<section id="assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="assumptions">2.5 Assumptions</h2>
+<ul>
+<li>Proportional hazards assumption<br>
+</li>
+<li>Accurate survival measurement<br>
+</li>
+<li>Independent censoring<br>
+</li>
+<li>Correct model specification</li>
+</ul>
+<p>If violated, stratified or time-dependent models may be considered.</p>
+<hr>
+</section>
+<section id="software" class="level2">
+<h2 class="anchored" data-anchor-id="software">2.6 Software</h2>
+<p>All analyses were conducted in <strong>R</strong> using:</p>
+<ul>
+<li><code>survival</code></li>
+<li><code>survminer</code></li>
+<li><code>dplyr</code></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="analysis-and-results" class="level1">
+<h1>3. Analysis and Results</h1>
+<section id="data-exploration" class="level2">
+<h2 class="anchored" data-anchor-id="data-exploration">3.1 Data Exploration</h2>
+<ul>
+<li>Describe dataset structure</li>
+<li>Summarize patient demographics</li>
+<li>Explore distribution of AJCC stages</li>
+<li>Identify missing values</li>
 </ul>
 </section>
+<section id="kaplanmeier-results" class="level2">
+<h2 class="anchored" data-anchor-id="kaplanmeier-results">3.2 Kaplan–Meier Results</h2>
+<ul>
+<li>Present survival curves by stage</li>
+<li>Report log-rank test results</li>
+<li>Interpret survival differences</li>
+</ul>
 </section>
-<section id="references" class="level2 unnumbered">
-
-
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-Lukasiewicz2021BreastCancer" class="csl-entry" role="listitem">
-Łukasiewicz, S., M. Czeczelewski, A. Forma, J. Baj, R. Sitarz, and A. Stanisławek. 2021. <span>“Breast Cancer—Epidemiology, Risk Factors, Classification, Prognostic Markers, and Current Treatment Strategies—an Updated Review.”</span> <em>Cancers</em> 13 (17): 4287. <a href="https://doi.org/10.3390/cancers13174287">https://doi.org/10.3390/cancers13174287</a>.
+<section id="cox-model-results" class="level2">
+<h2 class="anchored" data-anchor-id="cox-model-results">3.3 Cox Model Results</h2>
+<ul>
+<li>Report hazard ratios</li>
+<li>Interpret adjusted stage effects</li>
+<li>Evaluate proportional hazards diagnostics</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your R code will go here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<div id="ref-Xiong2025BreastCancer" class="csl-entry" role="listitem">
-Xiong, X., L. W. Zheng, Y. Ding, et al. 2025. <span>“Breast Cancer: Pathogenesis and Treatments.”</span> <em>Signal Transduction and Targeted Therapy</em> 10 (February): 49. <a href="https://doi.org/10.1038/s41392-024-02108-4">https://doi.org/10.1038/s41392-024-02108-4</a>.
-</div>
-</div></section></div></main>
+<hr>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>4. Discussion</h1>
+<ul>
+<li>Interpretation of findings</li>
+<li>Comparison with existing literature</li>
+<li>Clinical implications</li>
+<li>Study limitations</li>
+</ul>
+<hr>
+</section>
+<section id="conclusion" class="level1">
+<h1>5. Conclusion</h1>
+<p>Higher AJCC tumor stages are expected to demonstrate progressively worse survival outcomes. Confirming this relationship reinforces the importance of early detection and accurate staging in breast cancer management.</p>
+<hr>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<p>Ali S, Hamam D, Liu X and Lebrun J-J (2022) Terminal differentiation and anti-tumorigenic effects of prolactin in breast cancer. Front. Endocrinol. 13:993570. doi: 10.3389/fendo.2022.993570</p>
+<p>Koh, J., &amp; Kim, M. J. (2019). Introduction of a New Staging System of Breast Cancer for Radiologists: An Emphasis on the Prognostic Stage. Korean journal of radiology, 20(1), 69–82. https://doi.org/10.3348/kjr.2018.0231</p>
+<p>Nadia Howlader, Kathleen A. Cronin, Allison W. Kurian, Rebecca Andridge; Differences in Breast Cancer Survival by Molecular Subtypes in the United States. Cancer Epidemiol Biomarkers Prev 1 June 2018; 27 (6): 619–626. https://doi.org/10.1158/1055-9965.EPI-17-0627</p>
+<p>Bewick, V., Cheek, L., &amp; Ball, J. (2004). Statistics review 12: survival analysis. Critical care (London, England), 8(5), 389–394. https://doi.org/10.1186/cc2955</p>
+<p>Bradburn, M. J., Clark, T. G., Love, S. B., &amp; Altman, D. G. (2003). Survival analysis part II: multivariate data analysis–an introduction to concepts and methods. British journal of cancer, 89(3), 431–436. https://doi.org/10.1038/sj.bjc.6601119</p>
+<p>Xu, M., Shan, D., Zhang, R., Li, J., Guo, L., Chen, X., &amp; Qu, J. (2025). Differentiation of breast cancer subtypes and correlation with biological status using functional magnetic resonance imaging: comparison with amide proton transfer-weighted imaging and diffusion-weighted imaging. Quantitative imaging in medicine and surgery, 15(7), 6102–6117. https://doi.org/10.21037/qims-24-2174</p>
+<p>Breast Cancer Stages | Understanding Breast Cancer Staging. (2025, December 2). Cancer.gov. https://www.cancer.gov/types/breast/stages ‌</p>
+</section>
+
+</main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

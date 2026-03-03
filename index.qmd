@@ -1,76 +1,245 @@
 ---
-title: "Survival Differences by Tumor Stage in Breast Cancer: A Cox Proportional Hazards Analysis Using Real‑World Data"
-subtitle: "This is a Report Template Quarto"
+title: "Survival Differences by Tumor Stage in Breast Cancer: A Cox Proportional Hazards Analysis Using Real-World Data"
 author: "Victoria Nguyen & Julaxis Love"
-date: '`r Sys.Date()`'
+date: "`r Sys.Date()`"
+
 format:
-  html: 
+  html:
     code-fold: true
+    self-contained: true
+
 course: Capstone Projects in Data Science
-bibliography: references.bib # file contains bibtex for references
-#always_allow_html: true # this allows to get PDF with HTML features
-self-contained: true
-execute: 
+bibliography: references.bib
+
+execute:
   warning: false
   message: false
-editor: 
-  markdown: 
-    wrap: 72
+
+editor:
+  markdown:
+    wrap: sentence
 ---
 
-Slides: [slides.html](slides.html){target="_blank"} ( Go to `slides.qmd`
-to edit)
+Slides: [slides.html](slides.html){target="_blank"}  
+(Edit `slides.qmd` to modify presentation slides.)
 
-## Introduction 
+---
 
-Breast cancer is a major global health challenge, affecting millions of women and remaining one of the leading causes of cancer-related death. Although advances in screening, diagnosis, and treatment have improved survival for many patients, outcomes continue to vary widely. This variation is largely due to the heterogeneous nature of breast cancer, which differs across molecular subtypes, risk factors, and disease progression patterns [@Lukasiewicz2021BreastCancer; @Xiong2025BreastCancer]. As a result, early detection and personalized treatment strategies are critical for improving patient outcomes.
+## 1. Introduction
 
-Recent literature highlights significant progress in understanding breast cancer biology, including the identification of molecular subtypes, prognostic biomarkers, and targeted therapies. Advances in molecular profiling and emerging tools such as AI-assisted diagnostics have improved the ability to tailor treatment to individual patients [@Lukasiewicz2021BreastCancer]. However, despite these innovations, tumor stage at diagnosis remains one of the most influential predictors of survival and continues to play a central role in clinical decision-making [@Xiong2025BreastCancer].
+Breast cancer remains one of the most significant global health challenges and continues to rank among the leading causes of cancer-related mortality worldwide. Although advances in screening, diagnostic imaging, molecular profiling, and targeted therapies have substantially improved detection and treatment, survival outcomes still vary considerably across patients.
 
-Understanding how tumor stage affects survival is therefore essential for both clinicians and patients. Survival analysis offers a robust framework for evaluating time-to-event outcomes while accounting for censored observations and varying follow-up times. Methods such as Kaplan–Meier survival curves and Cox proportional hazards models are widely used to examine survival patterns and assess the impact of clinical factors on patient prognosis.
+This variation reflects the heterogeneous nature of breast cancer, which differs in molecular subtype, biological aggressiveness, and patterns of disease progression. While innovations such as genomic assays and AI-assisted diagnostics have enhanced personalized treatment planning, traditional clinical indicators—particularly tumor stage at diagnosis—remain among the strongest predictors of survival.
 
-Building on prior research, this study addresses the question: Does tumor stage at diagnosis influence survival time in breast cancer patients? We hypothesize that higher tumor stages are associated with shorter survival times. By examining this relationship, the study aims to reinforce the importance of early detection and accurate staging, while contributing evidence that supports personalized and stage-informed approaches to breast cancer care.
+Because tumor stage reflects the extent of disease spread at diagnosis, understanding its relationship with survival is critical for clinical decision-making and patient counseling.
 
-We will be using this data set for our project.=: https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
+This study investigates whether AJCC 6th Edition tumor stage is associated with overall survival time in breast cancer patients.  
 
+**Hypothesis:** Higher tumor stages are associated with shorter survival times.
 
-## Methods
+---
 
--   Detail the models or algorithms used.
+## 1.1 Overview of AJCC 6th Edition Breast Cancer Staging
 
--   Justify your choices based on the problem and data.
+The AJCC 6th edition staging system classifies breast cancer using:
 
+- **T** – Tumor size  
+- **N** – Regional lymph node involvement  
+- **M** – Presence of distant metastasis  
 
-## Analysis and Results
+These components are combined to assign an overall stage from I to IV.
 
-### Data Exploration and Visualization
+### Stage I  
+Localized tumors (≤ 2 cm) with minimal or no lymph node involvement.  
+Typically associated with excellent survival outcomes.
 
--   Describe your data sources and collection process.
+### Stage II  
+Larger tumors and/or limited regional lymph node involvement.  
+Generally favorable survival but more variable than Stage I.
 
--   Present initial findings and insights through visualizations.
+### Stage III  
+Locally advanced disease involving multiple lymph nodes or adjacent structures.  
+Significantly lower survival compared to Stages I and II.
 
--   Highlight unexpected patterns or anomalies.
-  
-```
+### Stage IV  
+Metastatic disease involving distant organs (e.g., bone, liver, lung, brain).  
+Associated with substantially poorer survival outcomes.
 
-### Modeling and Results
+Because stage at diagnosis strongly predicts prognosis, it serves as the primary predictor in this survival analysis.
 
--   Explain your data preprocessing and cleaning steps.
+---
 
--   Present your key findings in a clear and concise manner.
+## 1.2 Tumor Differentiation
 
--   Use visuals to support your claims.
+Tumor differentiation describes how closely cancer cells resemble normal breast tissue under microscopic examination.
 
--   **Tell a story about what the data reveals.**
+- **Well-differentiated**: Resemble normal cells; slower growth.
+- **Moderately differentiated**: Intermediate characteristics.
+- **Poorly differentiated**: Highly abnormal; more aggressive behavior.
+
+Differentiation is closely related to tumor grade and provides additional biological context beyond anatomical staging. Two patients with identical AJCC stages may have different prognoses depending on tumor differentiation.
+
+Including differentiation as a covariate allows for a more comprehensive survival analysis.
+
+---
+
+# 2. Methods
+
+This project evaluates the relationship between AJCC 6th edition stage and overall survival using survival analysis techniques.
+
+Survival analysis is appropriate when:
+- The outcome is time-to-event.
+- Some observations are censored.
+- Follow-up time varies across individuals.
+
+---
+
+## 2.1 Survival Function and Kaplan–Meier Estimation
+
+The survival function \( S(t) \) represents the probability of surviving beyond time \( t \).
+
+The Kaplan–Meier estimator is:
+
+\[
+\hat{S}(t) = \prod_{t_i \le t} \left(1 - \frac{d_i}{n_i}\right)
+\]
+
+Where:
+- \( t_i \) = event times  
+- \( d_i \) = number of deaths at time \( t_i \)  
+- \( n_i \) = individuals at risk just before \( t_i \)
+
+Kaplan–Meier curves visually compare survival distributions across stages.
+
+The **log-rank test** evaluates whether survival curves differ significantly.
+
+---
+
+## 2.2 Cox Proportional Hazards Model
+
+To adjust for covariates, a Cox proportional hazards model was used:
+
+\[
+h(t|X) = h_0(t)\exp(\beta_1X_1 + \beta_2X_2 + \dots + \beta_pX_p)
+\]
+
+Where:
+- \( h_0(t) \) = baseline hazard  
+- \( X \) = predictor variables  
+- \( e^{\beta} \) = hazard ratio  
+
+Interpretation:
+- HR > 1 → Increased risk  
+- HR < 1 → Decreased risk  
+
+---
+
+## 2.3 Dataset and Variables
+
+This study uses a publicly available Breast Cancer real-world dataset.
+
+### Outcome Variables
+- **Survival Months** – Time from diagnosis to death or last follow-up  
+- **Status** – 1 = death, 0 = censored  
+
+### Primary Predictor
+- **AJCC 6th Edition Stage (I–IV)**
+
+### Covariates
+- Age  
+- Race  
+- Differentiation  
+- Tumor Size  
+
+Patients missing required survival or staging data were excluded.
+
+---
+
+## 2.4 Analytical Steps
+
+1. Create survival object using `Surv()`
+2. Fit Kaplan–Meier curves using `survfit()`
+3. Compare curves with `survdiff()`
+4. Fit Cox model using `coxph()`
+5. Extract hazard ratios and 95% CIs
+6. Test proportional hazards using `cox.zph()`
+
+---
+
+## 2.5 Assumptions
+
+- Proportional hazards assumption  
+- Accurate survival measurement  
+- Independent censoring  
+- Correct model specification  
+
+If violated, stratified or time-dependent models may be considered.
+
+---
+
+## 2.6 Software
+
+All analyses were conducted in **R** using:
+
+- `survival`
+- `survminer`
+- `dplyr`
+
+---
+
+# 3. Analysis and Results
+
+## 3.1 Data Exploration
+
+- Describe dataset structure
+- Summarize patient demographics
+- Explore distribution of AJCC stages
+- Identify missing values
+
+## 3.2 Kaplan–Meier Results
+
+- Present survival curves by stage
+- Report log-rank test results
+- Interpret survival differences
+
+## 3.3 Cox Model Results
+
+- Report hazard ratios
+- Interpret adjusted stage effects
+- Evaluate proportional hazards diagnostics
 
 ```{r}
-
+# Your R code will go here
 ```
 
-### Conclusion
+---
 
--   Summarize your key findings.
+# 4. Discussion
 
--   Discuss the implications of your results.
+- Interpretation of findings
+- Comparison with existing literature
+- Clinical implications
+- Study limitations
 
-## References
+---
+
+# 5. Conclusion
+
+Higher AJCC tumor stages are expected to demonstrate progressively worse survival outcomes. Confirming this relationship reinforces the importance of early detection and accurate staging in breast cancer management.
+
+---
+
+# References
+Ali S, Hamam D, Liu X and Lebrun J-J (2022) Terminal differentiation and anti-tumorigenic effects of prolactin in breast cancer. Front. Endocrinol. 13:993570. doi: 10.3389/fendo.2022.993570
+
+Koh, J., & Kim, M. J. (2019). Introduction of a New Staging System of Breast Cancer for Radiologists: An Emphasis on the Prognostic Stage. Korean journal of radiology, 20(1), 69–82. https://doi.org/10.3348/kjr.2018.0231
+
+Nadia Howlader, Kathleen A. Cronin, Allison W. Kurian, Rebecca Andridge; Differences in Breast Cancer Survival by Molecular Subtypes in the United States. Cancer Epidemiol Biomarkers Prev 1 June 2018; 27 (6): 619–626. https://doi.org/10.1158/1055-9965.EPI-17-0627
+
+Bewick, V., Cheek, L., & Ball, J. (2004). Statistics review 12: survival analysis. Critical care (London, England), 8(5), 389–394. https://doi.org/10.1186/cc2955
+
+Bradburn, M. J., Clark, T. G., Love, S. B., & Altman, D. G. (2003). Survival analysis part II: multivariate data analysis--an introduction to concepts and methods. British journal of cancer, 89(3), 431–436. https://doi.org/10.1038/sj.bjc.6601119
+
+Xu, M., Shan, D., Zhang, R., Li, J., Guo, L., Chen, X., & Qu, J. (2025). Differentiation of breast cancer subtypes and correlation with biological status using functional magnetic resonance imaging: comparison with amide proton transfer-weighted imaging and diffusion-weighted imaging. Quantitative imaging in medicine and surgery, 15(7), 6102–6117. https://doi.org/10.21037/qims-24-2174
+
+Breast Cancer Stages | Understanding Breast Cancer Staging. (2025, December 2). Cancer.gov. https://www.cancer.gov/types/breast/stages ‌
