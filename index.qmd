@@ -96,64 +96,58 @@ Survival analysis is appropriate when:
 
 ## 2.1 Survival Function and Kaplan–Meier Estimation
 
-The survival function \( S(t) \) represents the probability of surviving beyond time \( t \).
+The survival function, \( S(t) \), quantifies the probability that an individual survives beyond a specified time \( t \). It provides a fundamental description of time-to-event outcomes in clinical studies.
 
-The Kaplan–Meier estimator is:
+The Kaplan–Meier estimator is used to estimate the survival function non-parametrically:
 
 \[
 \hat{S}(t) = \prod_{t_i \le t} \left(1 - \frac{d_i}{n_i}\right)
 \]
 
-Where:
-- \( t_i \) = event times  
-- \( d_i \) = number of deaths at time \( t_i \)  
-- \( n_i \) = individuals at risk just before \( t_i \)
+Where:  
+- \( t_i \) represents observed event times  
+- \( d_i \) denotes the number of deaths at time \( t_i \)  
+- \( n_i \) corresponds to the number of individuals at risk immediately prior to \( t_i \)  
 
-Kaplan–Meier curves visually compare survival distributions across stages.
-
-The **log-rank test** evaluates whether survival curves differ significantly.
+Kaplan–Meier curves allow for visual comparison of survival distributions across categorical groups, such as tumor stage. Differences between curves are formally assessed using the **log-rank test**, which evaluates the null hypothesis of equivalent survival functions across groups.
 
 ---
 
 ## 2.2 Cox Proportional Hazards Model
 
-To adjust for covariates, a Cox proportional hazards model was used:
+To account for multiple covariates simultaneously, we applied the Cox proportional hazards model, a semi-parametric method widely used in clinical survival analysis:
 
 \[
-h(t|X) = h_0(t)\exp(\beta_1X_1 + \beta_2X_2 + \dots + \beta_pX_p)
+h(t \mid X) = h_0(t)\exp(\beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p)
 \]
 
-Where:
-- \( h_0(t) \) = baseline hazard  
-- \( X \) = predictor variables  
-- \( e^{\beta} \) = hazard ratio  
+Where:  
+- \( h_0(t) \) is the baseline hazard function representing the hazard when all covariates are zero  
+- \( X \) denotes the vector of predictor variables (e.g., AJCC stage, age, tumor size, tumor differentiation)  
+- \( e^{\beta} \) is the hazard ratio (HR) quantifying the effect of each covariate on the hazard  
 
-Interpretation:
-- HR > 1 → Increased risk  
-- HR < 1 → Decreased risk  
+Interpretation:  
+- **HR > 1** indicates an increased risk of the event associated with the covariate  
+- **HR < 1** indicates a decreased risk of the event  
 
----
-
-## 2.3 Dataset and Variables
-
-This study uses a publicly available Breast Cancer real-world dataset.
-
-### Outcome Variables
-- **Survival Months** – Time from diagnosis to death or last follow-up  
-- **Status** – 1 = death, 0 = censored  
-
-### Primary Predictor
-- **AJCC 6th Edition Stage (I–IV)**
-
-### Covariates
-- Age  
-- Race  
-- Differentiation  
-- Tumor Size  
-
-Patients missing required survival or staging data were excluded.
+This model allows adjustment for confounding factors and provides insight into the relative contribution of each clinical feature to overall survival.
 
 ---
+
+## 2.3 Dataset and Analytical Workflow
+
+Analyses were conducted using a real-world breast cancer dataset containing demographic, clinical, and tumor-specific variables. Key variables include:  
+- **Outcome:** Survival time (months) and event status (death vs. censored)  
+- **Primary predictor:** AJCC 6th edition tumor stage  
+- **Covariates:** Age, race, tumor size, and tumor differentiation  
+
+The analytical workflow comprised the following steps:  
+1. Load and inspect the dataset for completeness and consistency.  
+2. Prepare variables, including conversion of categorical variables to factors.  
+3. Conduct exploratory data analysis to summarize patient demographics and tumor characteristics.  
+4. Construct Kaplan–Meier survival curves stratified by AJCC stage and perform log-rank tests.  
+5. Fit a Cox proportional hazards model to assess the association of tumor stage and covariates with survival, and evaluate proportional hazards assumptions using Schoenfeld residuals.  
+6. Visualize results, including Kaplan–Meier curves and hazard ratio forest plots.
 
 ## 2.4 Analytical Steps
 
@@ -185,37 +179,176 @@ All analyses were conducted in **R** using:
 - `survminer`
 - `dplyr`
 
----
-
 # 3. Analysis and Results
 
-## 3.1 Data Exploration
-
-- Describe dataset structure
-- Summarize patient demographics
-- Explore distribution of AJCC stages
-- Identify missing values
-
-## 3.2 Kaplan–Meier Results
-
-- Present survival curves by stage
-- Report log-rank test results
-- Interpret survival differences
-
-## 3.3 Cox Model Results
-
-- Report hazard ratios
-- Interpret adjusted stage effects
-- Evaluate proportional hazards diagnostics
-
 ```{r}
-# Your R code will go here
+
+
+library(survival)
+library(survminer)
+library(dplyr)
+library(ggplot2)
+
+
+# Load dataset
+data <- read.csv("breast_cancer_data.csv")
+
+# Preview dataset
+head(data)
+str(data)
+
+###cleaning data
+cleaned_data <- data %>%
+  select(
+    Age, Race, Marital.Status, X6th.Stage, differentiate,
+    Tumor.Size, Estrogen.Status, Progesterone.Status,
+    Regional.Node.Examined, Reginol.Node.Positive, Survival.Months,
+    Status
+  )
+
+cleaned_data <- cleaned_data %>%
+  rename(
+    `AJCC_Stage` = X6th.Stage,
+    `Regional.Node.Positive` = Reginol.Node.Positive
+  )
+
+cleaned_data <- cleaned_data %>%
+  mutate(
+    Status = case_when(
+      Status == "Alive" ~ 1,
+      Status == "Dead"  ~ 0
+    ),
+    Race = case_when(
+      Race == "White" ~ 1,
+      Race == "Black" ~ 2,
+      Race == "Other" ~ 3
+    ),
+    differentiate = case_when(
+      differentiate == "Well differentiated" ~ 1, ##grade 1
+      differentiate == "Moderately differentiated" ~ 2, ## grade 2
+      differentiate == "Poorly differentiated" ~ 3, ## grade 3
+      differentiate == "Undifferentiated" ~ 4
+    ),
+    Estrogen.Status = case_when(
+      Estrogen.Status == "Positive" ~ 1,
+      Estrogen.Status == "Negative" ~ 0
+    ),
+    Progesterone.Status = case_when(
+      Progesterone.Status == "Positive" ~ 1,
+      Progesterone.Status == "Negative" ~ 0
+    ),
+      Marital.Status = case_when(
+        Marital.Status == "Married" ~ 1,
+        Marital.Status == "Single " ~ 2,
+        Marital.Status == "Divorced" ~ 3,
+        Marital.Status == "Widowed" ~ 4,
+        Marital.Status == "Separated" ~ 5
+      )
+  )
+
+#check for missingness
+colSums(is.na(cleaned_data))
+
+summary(cleaned_data)
+
+#### 3.2 Distributions/ Counts
+ 
+  #age
+ggplot(cleaned_data, aes(Age)) +
+  geom_histogram(binwidth = 5, fill = "darkgreen", color = "white") +
+  labs(title = "Age Distribution", x = "Age", y = "Count")
+
+  #tumor
+ggplot(cleaned_data, aes(Tumor.Size)) +
+  geom_histogram(binwidth = 5, fill = "tomato", color = "white") +
+  labs(title = "Tumor Size Distribution", x = "Tumor Size (mm)", y = "Count")
+
+  #hormone
+ggplot(cleaned_data, aes(factor(Estrogen.Status))) +
+  geom_bar(fill = "purple") +
+  labs(title = "Estrogen Receptor Status", x = "Status (1=Positive, 0=Negative)", y = "Count")
+
+  #stage
+ggplot(cleaned_data, aes(AJCC_Stage)) +
+  geom_bar(fill = "steelblue") +
+  labs(title = "Number of Patients by AJCC Stage", x = "AJCC Stage", y = "Count")
+
+
+## 3.3 Kaplan–Meier Survival Analysis
+###Compare survival across AJCC stages
+##Present Kaplan–Meier curves
+##Report log-rank test results
+#```{r}
+# -----------------------------
+# Create survival object
+# -----------------------------
+surv_object <- Surv(cleaned_data$Survival.Months, cleaned_data$Status)
+
+# Fit Kaplan–Meier model by AJCC stage
+# -----------------------------
+km_fit <- survfit(surv_object ~ AJCC_Stage, data = cleaned_data)
+
+# -----------------------------
+# Kaplan–Meier survival curves by stage
+# -----------------------------
+ggsurvplot(
+  km_fit,
+  data = cleaned_data,
+  risk.table = TRUE,
+  pval = TRUE,
+  conf.int = TRUE,
+  legend.title = "AJCC Stage",
+  xlab = "Months",
+  ylab = "Survival Probability",
+  palette = "Dark2"
+)
+
+## Kaplan–Meier survival curves by estrogen
+km_fit_er <- survfit(surv_object ~ Estrogen.Status, data = cleaned_data)
+
+ggsurvplot(
+  km_fit_er,
+  data = cleaned_data,
+  risk.table = TRUE,
+  pval = TRUE,
+  conf.int = TRUE,
+  legend.title = "ER Status",
+  legend.labs = c("Negative", "Positive")
+)
+
+
+## 3.4 Cox Proportional Hazards Model
+##Fit Cox model adjusting for covariates
+##Report hazard ratios and confidence intervals
+##Evaluate proportional hazards assumption
+##```{r}
+# -----------------------------
+# Fit Cox proportional hazards model
+# -----------------------------
+cox_model <- coxph(
+  Surv(Survival.Months, Status) ~ AJCC_Stage + Age + Race + differentiate + Tumor.Size,
+  data = cleaned_data
+)
+
+# -----------------------------
+# View Cox model summary
+# -----------------------------
+summary(cox_model)
+
+# -----------------------------
+# Forest plot of hazard ratios
+# -----------------------------
+ggforest(cox_model, data = cleaned_data, main = "Hazard Ratios for Breast Cancer Survival")
+
+# -----------------------------
+# Test proportional hazards assumption
+# -----------------------------
+ph_test <- cox.zph(cox_model)
+print(ph_test)
+plot(ph_test)
 ```
-
----
-
-# 4. Discussion
-
+names(data)
+## 4. Discussion
 - Interpretation of findings
 - Comparison with existing literature
 - Clinical implications
