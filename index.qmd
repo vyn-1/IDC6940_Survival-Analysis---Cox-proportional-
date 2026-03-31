@@ -190,9 +190,9 @@ library(gt)
 library(tidyr)
 library(tidyverse)
 
-data <- read.csv("/Users/lexlove/Desktop/Breast_Cancer.csv")
+data <- read.csv("breast_cancer_data.csv")
 
-###cleaning data
+### cleaning data
 cleaned_data <- data %>%
   select(
     Age, Race, Marital.Status, X6th.Stage, differentiate,
@@ -475,7 +475,7 @@ ggsurvplot(
 ##Fit Cox model adjusting for covariates
 ##Report hazard ratios and confidence intervals
 ##Evaluate proportional hazards assumption
-##```{r}
+```{r}
 # -----------------------------
 # Fit Cox proportional hazards model
 # -----------------------------
@@ -500,6 +500,7 @@ ggforest(cox_model, data = cleaned_data, main = "Hazard Ratios for Breast Cancer
 ph_test <- cox.zph(cox_model)
 print(ph_test)
 plot(ph_test)
+```
 ## 4. Discussion
 - Interpretation of findings
 - Comparison with existing literature
