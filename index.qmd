@@ -272,7 +272,11 @@ variable_table %>%
   tab_footnote(
     footnote = "Each variable in the dataset, accompanied by a qualitative description."
   )
+```
 
+**Explanation (Table 1):** This table provides a description of all variables in the dataset, helping viewers understand what each variable represents prior to analysis.
+
+```
 ##Coding scheme
 codebook <- tibble(
   Variable = c(
@@ -303,7 +307,10 @@ codebook %>%
     Variable = "Variable",
     Coding = "Coding Scheme"
   )
+```
+  **Explanation (Table 2):** This table shows the coding scheme used for categorical variables, which is critical for interpreting the results of survival analysis and Cox regression.
 
+```
 #Clean Data summary
 make_cat_table <- function(data, var, label) {
   tbl <- table(data[[var]])
@@ -402,6 +409,9 @@ table1 %>%
       columns = Variable
     )
   )
+  
+```
+**Explanation (Table 3):** This table summarizes baseline characteristics of the cohort, including age, race, tumor stage, hormone status, and survival times. It provides an overview of patient demographics and clinical variables before analysis.
 
 #### 3.2 Distributions/ Counts
 
@@ -410,26 +420,34 @@ ggplot(cleaned_data, aes(Age)) +
   geom_histogram(binwidth = 5, fill = "darkgreen", color = "white") +
   labs(title = "Age Distribution", x = "Age", y = "Count")
 
+  **Explanation (Figure 1):** This histogram shows the distribution of patient ages at diagnosis. Most patients cluster in middle age, which can influence survival outcomes.
+
 #tumor
 ggplot(cleaned_data, aes(Tumor.Size)) +
   geom_histogram(binwidth = 5, fill = "tomato", color = "white") +
   labs(title = "Tumor Size Distribution", x = "Tumor Size (mm)", y = "Count")
+  
+  **Explanation (Figure 2):** This histogram illustrates the distribution of primary tumor sizes. Larger tumor size at diagnosis may be associated with worse survival.
 
 #hormone
 ggplot(cleaned_data, aes(factor(Estrogen.Status))) +
   geom_bar(fill = "purple") +
   labs(title = "Estrogen Receptor Status", x = "Status (1=Positive, 0=Negative)", y = "Count")
+  
+  **Explanation (Figure 3):** This bar chart shows the number of patients with positive versus negative estrogen receptor status, an important predictor of treatment response and survival.
 
 #stage
 ggplot(cleaned_data, aes(AJCC_Stage)) +
   geom_bar(fill = "steelblue") +
-  labs(title = "AJCC Stage Distribution", x = "AJCC Stage", y = "Count")
+  labs(title = "Figure 4.AJCC Stage Distribution", x = "AJCC Stage", y = "Count")
+  
+  **Explanation (Figure 4):** This figure displays the distribution of tumor stages at diagnosis. Stage is a key predictor of survival and is central to our analysis.
 
 ## 3.3 Kaplan–Meier Survival Analysis
-###Compare survival across AJCC stages
-##Present Kaplan–Meier curves
-##Report log-rank test results
-#```{r}
+Compare survival across AJCC stages<br>
+Present Kaplan–Meier curves<br>
+Report log-rank test results<br>
+
 # -----------------------------
 # Create survival object
 # -----------------------------
@@ -453,9 +471,11 @@ ggsurvplot(
   legend.title = "AJCC Stage",
   xlab = "Months",
   ylab = "Survival Probability",
-  palette = "Dark2"
+  palette = "Dark2",
+  title = "Figure 5. Kaplan–Meier Survival by AJCC Stage"
 )
 
+**Explanation (Figure 5):** Kaplan–Meier curves compare survival across AJCC stages. The plot and log-rank test show whether survival differs significantly between stages.
 
 ## Kaplan–Meier survival curves by estrogen
 km_fit_er <- survfit(surv_object ~ Estrogen.Status, data = cleaned_data)
@@ -467,14 +487,16 @@ ggsurvplot(
   pval = TRUE,
   conf.int = TRUE,
   legend.title = "ER Status",
-  legend.labs = c("Negative", "Positive")
+  legend.labs = c("Negative", "Positive"),
+  title = "Figure 6. Kaplan–Meier Survival by Estrogen Receptor Status"
 )
 
+**Explanation (Figure 6):** These survival curves show differences in overall survival based on estrogen receptor status. Positive ER status is generally associated with better prognosis.
 
 ## 3.4 Cox Proportional Hazards Model
-##Fit Cox model adjusting for covariates
-##Report hazard ratios and confidence intervals
-##Evaluate proportional hazards assumption
+Fit Cox model adjusting for covariates<br>
+Report hazard ratios and confidence intervals<br>
+Evaluate proportional hazards assumption<br>
 ```{r}
 # -----------------------------
 # Fit Cox proportional hazards model
@@ -492,8 +514,11 @@ summary(cox_model)
 # -----------------------------
 # Forest plot of hazard ratios
 # -----------------------------
-ggforest(cox_model, data = cleaned_data, main = "Hazard Ratios for Breast Cancer Survival")
+ggforest(cox_model, data = cleaned_data, main = "Figure 7. Hazard Ratios for Breast Cancer Survival")
+```
 
+**Explanation (Figure 7):** This forest plot visualizes hazard ratios from the Cox proportional hazards model, adjusting for age, race, tumor grade, and tumor size. HR > 1 indicates increased risk of death. The proportional hazards assumption is tested to validate model reliability.
+```
 # -----------------------------
 # Test proportional hazards assumption
 # -----------------------------
