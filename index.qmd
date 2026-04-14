@@ -35,50 +35,6 @@ In breast cancer research, the Cox proportional hazards model is especially valu
 
 ---
 
-## 1.1 Overview of AJCC 6th Edition Breast Cancer Staging
-
-The AJCC 6th edition staging system classifies breast cancer using:
-
-- **T** – Tumor size  
-- **N** – Regional lymph node involvement  
-- **M** – Presence of distant metastasis  
-
-These components are combined to assign an overall stage from I to IV.
-
-### Stage I  
-Localized tumors (≤ 2 cm) with minimal or no lymph node involvement.  
-Typically associated with excellent survival outcomes.
-
-### Stage II  
-Larger tumors and/or limited regional lymph node involvement.  
-Generally favorable survival but more variable than Stage I.
-
-### Stage III  
-Locally advanced disease involving multiple lymph nodes or adjacent structures.  
-Significantly lower survival compared to Stages I and II.
-
-### Stage IV  
-Metastatic disease involving distant organs (e.g., bone, liver, lung, brain).  
-Associated with substantially poorer survival outcomes.
-
-Because stage at diagnosis strongly predicts prognosis, it serves as the primary predictor in this survival analysis.
-
----
-
-## 1.2 Tumor Differentiation
-
-Tumor differentiation describes how closely cancer cells resemble normal breast tissue under microscopic examination.
-
-- **Well-differentiated**: Resemble normal cells; slower growth.
-- **Moderately differentiated**: Intermediate characteristics.
-- **Poorly differentiated**: Highly abnormal; more aggressive behavior.
-
-Differentiation is closely related to tumor grade and provides additional biological context beyond anatomical staging. Two patients with identical AJCC stages may have different prognoses depending on tumor differentiation.
-
-Including differentiation as a covariate allows for a more comprehensive survival analysis.
-
----
-
 # 2. Methods
 
 The goal of this analysis was to evaluate how tumor stage at diagnosis influences survival time among breast cancer patients. Guided by the hypothesis that higher tumor stage is associated with significantly worse survival, we used a combination of non‑parametric and semi‑parametric survival analysis techniques to model time‑to‑event outcomes. The dataset included demographic, clinical, and tumor‑specific variables such as age, race, AJCC 6th edition stage, tumor size, tumor differentiation, estrogen and progesterone receptor status, regional nodes examined, regional nodes positive, survival months, and event status. The analytical approach consisted of constructing Kaplan–Meier survival curves to visualize unadjusted survival differences across tumor stages, performing log‑rank tests to compare survival distributions, and fitting a Cox proportional hazards model to quantify the association between tumor stage and the hazard of death while adjusting for relevant covariates. All analyses were conducted in R, and model assumptions were evaluated to ensure the validity and interpretability of the results.
@@ -182,7 +138,7 @@ The analytical workflow comprised the following steps:\
 5. Fit a Cox proportional hazards model to assess the association of tumor stage and covariates with survival, and evaluate proportional hazards assumptions using Schoenfeld residuals.\
 6. Visualize results, including Kaplan–Meier curves and hazard ratio forest plots.
 
-3.1-Overview of AJCC 6th Edition Breast Cancer Staging
+## 3.1 - Overview of AJCC 6th Edition Breast Cancer Staging
 
 The AJCC 6th edition staging system classifies breast cancer using:
 
