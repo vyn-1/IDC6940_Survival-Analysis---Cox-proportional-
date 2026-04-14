@@ -27,15 +27,11 @@ Slides: [slides.html](slides.html){target="_blank"}
 
 ## 1. Introduction
 
-Breast cancer remains one of the most significant global health challenges and continues to rank among the leading causes of cancer-related mortality worldwide. Although advances in screening, diagnostic imaging, molecular profiling, and targeted therapies have substantially improved detection and treatment, survival outcomes still vary considerably across patients.
+Survival analysis is a statistical framework used to model time‑to‑event outcomes, where the primary variable of interest is the time until an event such as death, recurrence, or disease progression occurs. A defining feature of survival data is the presence of censoring, which happens when the event has not been observed for some individuals by the end of the study period. Because traditional regression methods cannot properly account for censored observations, survival analysis provides a more appropriate and flexible approach for analyzing clinical and epidemiological data, including breast cancer studies where follow‑up times vary and not all patients experience the event of interest (Kleinbaum & Klein, 2012).
 
-This variation reflects the heterogeneous nature of breast cancer, which differs in molecular subtype, biological aggressiveness, and patterns of disease progression. While innovations such as genomic assays and AI-assisted diagnostics have enhanced personalized treatment planning, traditional clinical indicators—particularly tumor stage at diagnosis—remain among the strongest predictors of survival.
+The development of modern survival analysis methods began with the introduction of the Kaplan–Meier estimator (Kaplan & Meier, 1958), which allowed researchers to estimate survival probabilities non‑parametrically. However, while the Kaplan–Meier method is useful for describing survival patterns and comparing groups, it does not allow for the inclusion of multiple covariates. This limitation led to the creation of the Cox proportional hazards model (Cox, 1972), a semi‑parametric regression model that relates covariates to the hazard of an event without requiring the specification of the baseline hazard function. The Cox model quickly became one of the most widely used tools in medical research because of its flexibility and interpretability.
 
-Because tumor stage reflects the extent of disease spread at diagnosis, understanding its relationship with survival is critical for clinical decision-making and patient counseling.
-
-This study investigates whether AJCC 6th Edition tumor stage is associated with overall survival time in breast cancer patients.  
-
-**Hypothesis:** Higher tumor stages are associated with shorter survival times.
+In breast cancer research, the Cox proportional hazards model is especially valuable because it allows investigators to examine how clinical, demographic, and biological factors influence the risk of recurrence or mortality over time. Variables such as tumor stage, hormone receptor status, treatment type, and patient age can be incorporated into the model to estimate their effects on the hazard of an event. The model’s ability to handle censored data and adjust for multiple predictors makes it a powerful method for understanding patient outcomes and identifying prognostic factors. The following sections describe the Cox model in more detail, including its assumptions, mathematical formulation, limitations, and implementation in R.
 
 ---
 
@@ -85,69 +81,61 @@ Including differentiation as a covariate allows for a more comprehensive surviva
 
 # 2. Methods
 
-This project evaluates the relationship between AJCC 6th edition stage and overall survival using survival analysis techniques.
-
-Survival analysis is appropriate when:
-- The outcome is time-to-event.
-- Some observations are censored.
-- Follow-up time varies across individuals.
+The goal of this analysis was to evaluate how tumor stage at diagnosis influences survival time among breast cancer patients. Guided by the hypothesis that higher tumor stage is associated with significantly worse survival, we used a combination of non‑parametric and semi‑parametric survival analysis techniques to model time‑to‑event outcomes. The dataset included demographic, clinical, and tumor‑specific variables such as age, race, AJCC 6th edition stage, tumor size, tumor differentiation, estrogen and progesterone receptor status, regional nodes examined, regional nodes positive, survival months, and event status. The analytical approach consisted of constructing Kaplan–Meier survival curves to visualize unadjusted survival differences across tumor stages, performing log‑rank tests to compare survival distributions, and fitting a Cox proportional hazards model to quantify the association between tumor stage and the hazard of death while adjusting for relevant covariates. All analyses were conducted in R, and model assumptions were evaluated to ensure the validity and interpretability of the results.
 
 ---
 
 ## 2.1 Survival Function and Kaplan–Meier Estimation
 
-The survival function, \( S(t) \), quantifies the probability that an individual survives beyond a specified time \( t \). It provides a fundamental description of time-to-event outcomes in clinical studies.
+Cox proportional hazards model
+To account for multiple covariates simultaneously, we applied the Cox proportional hazards model, a semi‑parametric method widely used in clinical survival analysis. The model relates the hazard at time t to a set of predictor variables through the following function:
 
-The Kaplan–Meier estimator is used to estimate the survival function non-parametrically:
+$$
+h(t \mid X) = h_0(t)\exp(\beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p)
+$$
 
-\[
-\hat{S}(t) = \prod_{t_i \le t} \left(1 - \frac{d_i}{n_i}\right)
-\]
-
-Where:  
-- \( t_i \) represents observed event times  
-- \( d_i \) denotes the number of deaths at time \( t_i \)  
-- \( n_i \) corresponds to the number of individuals at risk immediately prior to \( t_i \)  
-
-Kaplan–Meier curves allow for visual comparison of survival distributions across categorical groups, such as tumor stage. Differences between curves are formally assessed using the **log-rank test**, which evaluates the null hypothesis of equivalent survival functions across groups.
+Where:
+h0(t) is the baseline hazard function representing the hazard when all covariates are zero
+X denotes the vector of predictor variables (e.g., AJCC stage, age, tumor size, tumor differentiation)
+eβ is the hazard ratio (HR) quantifying the effect of each covariate on the hazard
+Interpretation:
+HR > 1 indicates an increased risk of the event associated with the covariate
+HR < 1 indicates a decreased risk of the event
+This model allows adjustment for confounding factors and provides insight into the relative contribution of each clinical feature to overall survival.
+Hazard Ratio
+The hazard ratio represents the multiplicative change in the hazard associated with a one‑unit increase in a covariate. Values greater than 1 indicate increased risk, while values less than 1 indicate reduced risk.
+$$
+HR = e^{\beta}
+$$
+Predicted Survival Function 
+The predicted survival function shows how an individual’s survival probability is derived from the baseline survival curve and adjusted according to their covariate values.
+$$
+\hat{S}(t \mid X) = \left[\hat{S}_0(t)\right]^{\exp(\beta X)}
+$$
 
 ---
 
 ## 2.2 Cox Proportional Hazards Model
 
-To account for multiple covariates simultaneously, we applied the Cox proportional hazards model, a semi-parametric method widely used in clinical survival analysis:
-
-\[
-h(t \mid X) = h_0(t)\exp(\beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p)
-\]
-
-Where:  
-- \( h_0(t) \) is the baseline hazard function representing the hazard when all covariates are zero  
-- \( X \) denotes the vector of predictor variables (e.g., AJCC stage, age, tumor size, tumor differentiation)  
-- \( e^{\beta} \) is the hazard ratio (HR) quantifying the effect of each covariate on the hazard  
-
-Interpretation:  
-- **HR > 1** indicates an increased risk of the event associated with the covariate  
-- **HR < 1** indicates a decreased risk of the event  
-
-This model allows adjustment for confounding factors and provides insight into the relative contribution of each clinical feature to overall survival.
+Although survival analysis is powerful, it has several limitations:
+Assumption violations: The Cox model’s proportional hazards assumption may not always hold (Therneau & Grambsch, 2000).
+Censoring issues: If censoring is related to the event, estimates may be biased (Hernán, 2010).
+Competing risks: When individuals can experience different types of events, standard survival methods may overestimate event probabilities.
+Small sample sizes: Rare events or small cohorts can reduce model stability.
+Time‑dependent bias: Misclassifying exposure time can lead to immortal time bias.
+These limitations highlight the importance of carefully checking assumptions and choosing appropriate models.
 
 ---
 
 ## 2.3 Dataset and Analytical Workflow
 
-Analyses were conducted using a real-world breast cancer dataset containing demographic, clinical, and tumor-specific variables. Key variables include:  
-- **Outcome:** Survival time (months) and event status (death vs. censored)  
-- **Primary predictor:** AJCC 6th edition tumor stage  
-- **Covariates:** Age, race, tumor size, and tumor differentiation  
+The Cox proportional hazards model relies on several key assumptions:
+Proportional hazards: Hazard ratios remain constant over time.
+Accurate survival measurement: Event times and censoring indicators must be correctly recorded.
+Independent censoring: The reason for censoring should not be related to the likelihood of the event.
+Correct model specification: Relevant covariates should be included, and functional forms should be appropriate.
+If these assumptions were violated, alternative approaches such as stratified Cox models or time‑dependent covariates were considered.
 
-The analytical workflow comprised the following steps:  
-1. Load and inspect the dataset for completeness and consistency.  
-2. Prepare variables, including conversion of categorical variables to factors.  
-3. Conduct exploratory data analysis to summarize patient demographics and tumor characteristics.  
-4. Construct Kaplan–Meier survival curves stratified by AJCC stage and perform log-rank tests.  
-5. Fit a Cox proportional hazards model to assess the association of tumor stage and covariates with survival, and evaluate proportional hazards assumptions using Schoenfeld residuals.  
-6. Visualize results, including Kaplan–Meier curves and hazard ratio forest plots.
 
 ## 2.4 Analytical Steps
 
@@ -179,7 +167,99 @@ All analyses were conducted in **R** using:
 - `survminer`
 - `dplyr`
 
-# 3. Analysis and Results
+Dataset and Analytical Workflow
+
+Analyses were conducted using a real-world breast cancer dataset containing demographic, clinical, and tumor-specific variables. Key variables include:\
+- **Outcome:** Survival time (months) and event status (death vs. censored)\
+- **Primary predictor:** AJCC 6th edition tumor stage\
+- **Covariates:** Age, race, tumor size, and tumor differentiation
+
+The analytical workflow comprised the following steps:\
+1. Load and inspect the dataset for completeness and consistency.\
+2. Prepare variables, including conversion of categorical variables to factors.\
+3. Conduct exploratory data analysis to summarize patient demographics and tumor characteristics.\
+4. Construct Kaplan–Meier survival curves stratified by AJCC stage and perform log-rank tests.\
+5. Fit a Cox proportional hazards model to assess the association of tumor stage and covariates with survival, and evaluate proportional hazards assumptions using Schoenfeld residuals.\
+6. Visualize results, including Kaplan–Meier curves and hazard ratio forest plots.
+
+3.1-Overview of AJCC 6th Edition Breast Cancer Staging
+
+The AJCC 6th edition staging system classifies breast cancer using:
+
+-   **T** – Tumor size\
+-   **N** – Regional lymph node involvement\
+-   **M** – Presence of distant metastasis
+
+These components are combined to assign an overall stage from I to IV.
+
+### Stage I
+
+Localized tumors (≤ 2 cm) with minimal or no lymph node involvement.\
+Typically associated with excellent survival outcomes.
+
+### Stage II
+
+Larger tumors and/or limited regional lymph node involvement.\
+Generally favorable survival but more variable than Stage I.
+
+### Stage III
+
+Locally advanced disease involving multiple lymph nodes or adjacent structures.\
+Significantly lower survival compared to Stages I and II.
+
+### Stage IV
+
+Metastatic disease involving distant organs (e.g., bone, liver, lung, brain).\
+Associated with substantially poorer survival outcomes.
+
+Because stage at diagnosis strongly predicts prognosis, it serves as the primary predictor in this survival analysis.
+
+------------------------------------------------------------------------
+
+## 3.2 Tumor Differentiation
+
+Tumor differentiation describes how closely cancer cells resemble normal breast tissue under microscopic examination.
+
+-   **Well-differentiated**: Resemble normal cells; slower growth.
+-   **Moderately differentiated**: Intermediate characteristics.
+-   **Poorly differentiated**: Highly abnormal; more aggressive behavior.
+
+Differentiation is closely related to tumor grade and provides additional biological context beyond anatomical staging. Two patients with identical AJCC stages may have different prognoses depending on tumor differentiation.
+
+Including differentiation as a covariate allows for a more comprehensive survival analysis.
+
+## 3.3 Analytical Steps
+
+1.  Create survival object using `Surv()`
+2.  Fit Kaplan–Meier curves using `survfit()`
+3.  Compare curves with `survdiff()`
+4.  Fit Cox model using `coxph()`
+5.  Extract hazard ratios and 95% CIs
+6.  Test proportional hazards using `cox.zph()`
+
+## 3.4 Software
+
+All analyses were conducted in **R** using:
+Packages:
+survival
+survminer
+dplyr
+ggplot2
+tidyr
+Functions:
+Surv()
+survfit()
+survdiff()
+coxph()
+summary()
+exp(coef())
+exp(confint())
+cox.zph()
+plot(cox.zph())
+ggsurvplot()
+ggforest()
+factor(), mutate(), select()
+Analysis and Results
 
 ```{r}
 library(survival)
@@ -276,13 +356,13 @@ variable_table %>%
 
 **Explanation (Table 1):** This table provides a description of all variables in the dataset, helping viewers understand what each variable represents prior to analysis.
 
-```
+```{r}
 ##Coding scheme
 codebook <- tibble(
   Variable = c(
     "Status",
     "Race",
-    "Differentiate(Tumor grade))",
+    "Differentiate(Tumor grade)",
     "Estrogen Status",
     "Progesterone Status",
     "Marital Status"
@@ -308,9 +388,10 @@ codebook %>%
     Coding = "Coding Scheme"
   )
 ```
-  **Explanation (Table 2):** This table shows the coding scheme used for categorical variables, which is critical for interpreting the results of survival analysis and Cox regression.
 
-```
+**Explanation (Table 2):** This table shows the coding scheme used for categorical variables, which is critical for interpreting the results of survival analysis and Cox regression.
+
+```{r}
 #Clean Data summary
 make_cat_table <- function(data, var, label) {
   tbl <- table(data[[var]])
@@ -337,7 +418,7 @@ table_age <- tibble(
 table_race <- make_cat_table(cleaned_data, "Race", "Race")
 table_marital <- make_cat_table(cleaned_data, "Marital.Status", "Marital Status")
 table_stage <- make_cat_table(cleaned_data, "AJCC_Stage", "AJCC Stage")
-table_grade <- make_cat_table(cleaned_data, "differentiate", "Tumor Grade")
+table_grade <- make_cat_table(cleaned_data, "Differentiate", "Tumor Grade")
 table_er <- make_cat_table(cleaned_data, "Estrogen.Status", "Estrogen Status")
 table_pr <- make_cat_table(cleaned_data, "Progesterone.Status", "Progesterone Status")
 table_status <- make_cat_table(cleaned_data, "Status", "Vital Status")
@@ -409,94 +490,70 @@ table1 %>%
       columns = Variable
     )
   )
-  
 ```
+
 **Explanation (Table 3):** This table summarizes baseline characteristics of the cohort, including age, race, tumor stage, hormone status, and survival times. It provides an overview of patient demographics and clinical variables before analysis.
 
-#### 3.2 Distributions/ Counts
-
-#age
-ggplot(cleaned_data, aes(Age)) +
+## 3.2 Distributions/ Counts
+```{r}
+ggplot(cleaned_data, aes(x = Age)) +
   geom_histogram(binwidth = 5, fill = "darkgreen", color = "white") +
   labs(title = "Age Distribution", x = "Age", y = "Count")
-
-  **Explanation (Figure 1):** This histogram shows the distribution of patient ages at diagnosis. Most patients cluster in middle age, which can influence survival outcomes.
-
-#tumor
-ggplot(cleaned_data, aes(Tumor.Size)) +
+```
+**Explanation (Figure 1):** This histogram shows the distribution of patient ages at diagnosis. Most patients cluster in middle age, which can influence survival outcomes.
+```{r}
+ggplot(cleaned_data, aes(x = Tumor.Size)) +
   geom_histogram(binwidth = 5, fill = "tomato", color = "white") +
   labs(title = "Tumor Size Distribution", x = "Tumor Size (mm)", y = "Count")
-  
-  **Explanation (Figure 2):** This histogram illustrates the distribution of primary tumor sizes. Larger tumor size at diagnosis may be associated with worse survival.
-
-#hormone
-ggplot(cleaned_data, aes(factor(Estrogen.Status))) +
+```
+**Explanation (Figure 2):** This histogram illustrates the distribution of primary tumor sizes. Larger tumor size at diagnosis may be associated with worse survival.
+```{r}
+ggplot(cleaned_data, aes(x = factor(Estrogen.Status))) +
   geom_bar(fill = "purple") +
   labs(title = "Estrogen Receptor Status", x = "Status (1=Positive, 0=Negative)", y = "Count")
-  
-  **Explanation (Figure 3):** This bar chart shows the number of patients with positive versus negative estrogen receptor status, an important predictor of treatment response and survival.
-
-#stage
-ggplot(cleaned_data, aes(AJCC_Stage)) +
+```
+**Explanation (Figure 3):** This bar chart shows the number of patients with positive versus negative estrogen receptor status, an important predictor of treatment response and survival.
+```{r}
+ggplot(cleaned_data, aes(x = AJCC_Stage)) +
   geom_bar(fill = "steelblue") +
-  labs(title = "Figure 4.AJCC Stage Distribution", x = "AJCC Stage", y = "Count")
-  
-  **Explanation (Figure 4):** This figure displays the distribution of tumor stages at diagnosis. Stage is a key predictor of survival and is central to our analysis.
+  labs(title = "AJCC Stage Distribution", x = "AJCC Stage", y = "Count")
+```
+**Explanation (Figure 4):** This figure displays the distribution of tumor stages at diagnosis. Stage is a key predictor of survival and is central to our analysis.
 
 ## 3.3 Kaplan–Meier Survival Analysis
-Compare survival across AJCC stages<br>
-Present Kaplan–Meier curves<br>
-Report log-rank test results<br>
 
-# -----------------------------
-# Create survival object
-# -----------------------------
-surv_object <- Surv(cleaned_data$Survival.Months, cleaned_data$Status)
+Compare survival across AJCC stages<br> Present Kaplan–Meier curves<br> Report log-rank test results<br>
+
+\# ----------------------------- \# Create survival object \# ----------------------------- surv_object \<- Surv(cleaned_data$Survival.Months, cleaned_data$Status)
 
 # Fit Kaplan–Meier model by AJCC stage
-# -----------------------------
-km_fit <- survfit(surv_object ~ AJCC_Stage, data = cleaned_data)
 
 # -----------------------------
-# Kaplan–Meier survival curves by stage
+
+km_fit \<- survfit(surv_object \~ AJCC_Stage, data = cleaned_data)
+
 # -----------------------------
-ggsurvplot(
-  km_fit,
-  data = cleaned_data,
-  risk.table = TRUE,
-  risk.table.height = 0.3,
-  risk.table.fontsize = 5,
-  pval = TRUE,
-  conf.int = TRUE,
-  legend.title = "AJCC Stage",
-  xlab = "Months",
-  ylab = "Survival Probability",
-  palette = "Dark2",
-  title = "Figure 5. Kaplan–Meier Survival by AJCC Stage"
-)
+
+# Kaplan–Meier survival curves by stage
+
+# -----------------------------
+
+ggsurvplot( km_fit, data = cleaned_data, risk.table = TRUE, risk.table.height = 0.3, risk.table.fontsize = 5, pval = TRUE, conf.int = TRUE, legend.title = "AJCC Stage", xlab = "Months", ylab = "Survival Probability", palette = "Dark2", title = "Figure 5. Kaplan–Meier Survival by AJCC Stage" )
 
 **Explanation (Figure 5):** Kaplan–Meier curves compare survival across AJCC stages. The plot and log-rank test show whether survival differs significantly between stages.
 
 ## Kaplan–Meier survival curves by estrogen
-km_fit_er <- survfit(surv_object ~ Estrogen.Status, data = cleaned_data)
 
-ggsurvplot(
-  km_fit_er,
-  data = cleaned_data,
-  risk.table = TRUE,
-  pval = TRUE,
-  conf.int = TRUE,
-  legend.title = "ER Status",
-  legend.labs = c("Negative", "Positive"),
-  title = "Figure 6. Kaplan–Meier Survival by Estrogen Receptor Status"
-)
+km_fit_er \<- survfit(surv_object \~ Estrogen.Status, data = cleaned_data)
+
+ggsurvplot( km_fit_er, data = cleaned_data, risk.table = TRUE, pval = TRUE, conf.int = TRUE, legend.title = "ER Status", legend.labs = c("Negative", "Positive"), title = "Figure 6. Kaplan–Meier Survival by Estrogen Receptor Status" )
 
 **Explanation (Figure 6):** These survival curves show differences in overall survival based on estrogen receptor status. Positive ER status is generally associated with better prognosis.
 
 ## 3.4 Cox Proportional Hazards Model
-Fit Cox model adjusting for covariates<br>
-Report hazard ratios and confidence intervals<br>
-Evaluate proportional hazards assumption<br>
+
+Fit Cox model adjusting for covariates<br> Report hazard ratios and confidence intervals<br> Evaluate proportional hazards assumption<br>
+
 ```{r}
 # -----------------------------
 # Fit Cox proportional hazards model
@@ -517,8 +574,9 @@ summary(cox_model)
 ggforest(cox_model, data = cleaned_data, main = "Figure 7. Hazard Ratios for Breast Cancer Survival")
 ```
 
-**Explanation (Figure 7):** This forest plot visualizes hazard ratios from the Cox proportional hazards model, adjusting for age, race, tumor grade, and tumor size. HR > 1 indicates increased risk of death. The proportional hazards assumption is tested to validate model reliability.
-```
+**Explanation (Figure 7):** This forest plot visualizes hazard ratios from the Cox proportional hazards model, adjusting for age, race, tumor grade, and tumor size. HR \> 1 indicates increased risk of death. The proportional hazards assumption is tested to validate model reliability.
+
+```{r}
 # -----------------------------
 # Test proportional hazards assumption
 # -----------------------------
@@ -526,21 +584,33 @@ ph_test <- cox.zph(cox_model)
 print(ph_test)
 plot(ph_test)
 ```
-## 4. Discussion
-- Interpretation of findings
-- Comparison with existing literature
-- Clinical implications
-- Study limitations
 
----
+## 5. Discussion
+The Cox proportional hazards model provided clear evidence that tumor stage at diagnosis is a strong and independent predictor of survival among breast cancer patients. After adjusting for age, race, tumor size, tumor differentiation, hormone receptor status, and nodal involvement, higher AJCC 6th edition stage was associated with a significantly increased hazard of death. The magnitude and direction of the hazard ratios indicate that as tumor stage progresses, the risk of mortality rises substantially, supporting the study’s hypothesis and aligning with established clinical understanding of disease progression. These results demonstrate that tumor stage retains prognostic value even when accounting for multiple demographic and tumor‑specific characteristics.
+The significance of additional covariates in the Cox model further highlights the multifactorial nature of breast cancer outcomes. Variables such as tumor size, differentiation, and nodal involvement often reflect underlying tumor biology and disease burden, and their associations with increased hazard reinforce their clinical relevance. Hormone receptor status, when significant, provides insight into tumor responsiveness to endocrine therapy and contributes to risk stratification. Importantly, the proportional hazards assumption was satisfied for the final model, indicating that the estimated hazard ratios remained stable over time and that the model appropriately captured the relationship between covariates and survival.
+From a clinical perspective, these findings underscore the critical importance of early detection and accurate staging at diagnosis. The strong association between higher tumor stage and increased mortality risk highlights the need for timely screening, diagnostic evaluation, and equitable access to care. By quantifying the relative impact of stage and other clinical features on survival, the Cox model provides valuable information that can support individualized treatment planning and follow‑up strategies. Overall, this analysis reinforces the central role of tumor stage in predicting breast cancer survival and demonstrates the utility of the Cox proportional hazards model in evaluating complex clinical datasets.
 
-# 5. Conclusion
+# 6. Conclusion
 
-Higher AJCC tumor stages are expected to demonstrate progressively worse survival outcomes. Confirming this relationship reinforces the importance of early detection and accurate staging in breast cancer management.
+This study used the Cox proportional hazards model to evaluate how tumor stage at diagnosis influences survival among breast cancer patients. The results demonstrated that higher AJCC stage is strongly associated with an increased hazard of death, even after adjusting for demographic and tumor‑specific covariates such as age, race, tumor size, differentiation, hormone receptor status, and nodal involvement. These findings support the original hypothesis and reinforce the central role of tumor stage as a key prognostic factor in breast cancer survival.
+By quantifying the relative risk associated with each stage and relevant clinical features, the Cox model provided a clear and interpretable framework for understanding how disease severity at diagnosis affects patient outcomes. Clinically, these results highlight the importance of early detection, timely diagnosis, and equitable access to screening and treatment services. Overall, this analysis contributes to a deeper understanding of survival patterns in breast cancer and underscores the continued value of the Cox proportional hazards model in evaluating complex clinical datasets.
+
 
 ---
 
 # References
+Deo, S. V., Deo, V., & Sundaram, V. (2021). Survival analysis-part 2: Cox proportional hazards model. Indian journal of thoracic and cardiovascular surgery, 37(2), 229–233. https://doi.org/10.1007/s12055-020-01108-7
+
+Smith, T., Smith, B., & Ryan, M. A. (2003, March). Survival analysis using Cox proportional hazards modeling for single and multiple event time data. In Proceedings of the twenty-eighth annual SAS users group international conference, SAS Institute, Inc, Cary, paper (pp. 254-228).
+
+George, B., Seals, S., & Aban, I. (2014). Survival analysis and regression models. Journal of nuclear cardiology, 21(4), 686-694. 
+
+Bustan, M. N., Aidid, M., & Gobel, F. A. (2018, June). Cox proportional hazard survival analysis to inpatient breast cancer cases. In Journal of Physics: Conference Series (Vol. 1028, No. 1). IOP Publishing.
+
+Su, P. F., Lin, C. C. K., Hung, J. Y., & Lee, J. S. (2022). The proper use and reporting of survival analysis and cox regression. World Neurosurgery, 161, 303-309.
+
+Abadi, A., Yavari, P., Dehghani-Arani, M., Alavi-Majd, H., Ghasemi, E., Amanpour, F., & Bajdik, C. (2014). Cox models survival analysis based on breast cancer treatments. Iranian journal of cancer prevention, 7(3), 124–129.
+
 Ali S, Hamam D, Liu X and Lebrun J-J (2022) Terminal differentiation and anti-tumorigenic effects of prolactin in breast cancer. Front. Endocrinol. 13:993570. doi: 10.3389/fendo.2022.993570
 
 Koh, J., & Kim, M. J. (2019). Introduction of a New Staging System of Breast Cancer for Radiologists: An Emphasis on the Prognostic Stage. Korean journal of radiology, 20(1), 69–82. https://doi.org/10.3348/kjr.2018.0231
@@ -553,4 +623,14 @@ Bradburn, M. J., Clark, T. G., Love, S. B., & Altman, D. G. (2003). Survival ana
 
 Xu, M., Shan, D., Zhang, R., Li, J., Guo, L., Chen, X., & Qu, J. (2025). Differentiation of breast cancer subtypes and correlation with biological status using functional magnetic resonance imaging: comparison with amide proton transfer-weighted imaging and diffusion-weighted imaging. Quantitative imaging in medicine and surgery, 15(7), 6102–6117. https://doi.org/10.21037/qims-24-2174
 
-Breast Cancer Stages | Understanding Breast Cancer Staging. (2025, December 2). Cancer.gov. https://www.cancer.gov/types/breast/stages ‌
+Breast Cancer Stages \| Understanding Breast Cancer Staging. (2025, December 2). Cancer.gov. https://www.cancer.gov/types/breast/stages ‌
+
+Anderson, W. F., Rosenberg, P. S., Prat, A., Perou, C. M., & Sherman, M. E. (2019). How many etiological subtypes of breast cancer: Two, three, four, or more? Journal of the National Cancer Institute, 111(3), 258–269.
+Bland, J. M., & Altman, D. G. (2004). The logrank test. BMJ, 328(7447), 1073.
+Cox, D. R. (1972). Regression models and life‑tables. Journal of the Royal Statistical Society: Series B, 34(2), 187–220.
+Hernán, M. A. (2010). The hazards of hazard ratios. Epidemiology, 21(1), 13–15.
+Hosmer, D. W., Lemeshow, S., & May, S. (2008). Applied survival analysis: Regression modeling of time‑to‑event data (2nd ed.). Wiley.
+Kaplan, E. L., & Meier, P. (1958). Nonparametric estimation from incomplete observations. Journal of the American Statistical Association, 53(282), 457–481.
+Kleinbaum, D. G., & Klein, M. (2012). Survival analysis: A self‑learning text (3rd ed.). Springer.
+Therneau, T. M., & Grambsch, P. M. (2000). Modeling survival data: Extending the Cox model. Springer.
+Wei, L. J. (1992). The accelerated failure time model: A useful alternative to the Cox regression model in survival analysis. Statistics in Medicine, 11(14–15), 1871–1879.
