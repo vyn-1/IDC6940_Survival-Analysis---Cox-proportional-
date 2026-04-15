@@ -219,9 +219,10 @@ Including differentiation as a covariate allows for a more comprehensive surviva
 ## 3.3 Analytical Steps
 
 1.  Create survival object using `Surv()`
-2.  Fit Cox model using `coxph()`
-3.  Extract hazard ratios and 95% CIs
-4.  Test proportional hazards using `cox.zph()`
+2.  Fit Kaplan–Meier curves using `survfit()`
+3.  Fit Cox model using `coxph()`
+4.  Extract hazard ratios and 95% CIs
+5.  Test proportional hazards using `cox.zph()`
 
 ## 3.4 Software
 
