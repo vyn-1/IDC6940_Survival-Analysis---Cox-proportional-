@@ -1,10 +1,14 @@
 ---
-title: "Present a great story for data science projects"
-subtitle: "This is a Slide Template"
-author: "Students names (Advisor: Dr. Cohen)"
+title: "Survival Differences by Tumor Stage in Breast Cancer"
+subtitle: "A Cox Proportional Hazards Analysis Using Real-World Data"
+author: "Victoria Nguyen & Julaxis Love (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
 format:
-  revealjs
+  revealjs:
+    theme: dark
+    slide-number: true
+    transition: fade
+    css: custom.scss
 course: Capstone Projects in Data Science
 bibliography: references.bib # file contains bibtex for references
 #always_allow_html: true # this allows to get PDF with HTML features
@@ -17,101 +21,192 @@ editor:
     wrap: 72
 ---
 
-::: callout-important
-**Remember:** Your goal is to make your audience understand and care
-about your findings. By crafting a compelling story, you can effectively
-communicate the value of your data science project.
+```{r setup, include=FALSE}
+library(survival)
+library(survminer)
+library(dplyr)
+library(ggplot2)
 
-Carefully read this template since it has instructions and tips to
-writing!
+# Load data
+data <- read.csv("breast_cancer_data.csv")
 
-More information about `revealjs`:
-<https://quarto.org/docs/reference/formats/presentations/revealjs.html>
-:::
+# Clean Data
+cleaned_data <- data %>%
+  select(
+    Age, Race, Marital.Status, X6th.Stage, differentiate,
+    Tumor.Size, Estrogen.Status, Progesterone.Status,
+    Regional.Node.Examined, Reginol.Node.Positive,
+    Survival.Months, Status
+  ) %>%
+  rename(
+    AJCC_Stage = X6th.Stage,
+    Regional.Node.Positive = Reginol.Node.Positive
+  ) %>%
+  mutate(
+    Status = case_when(
+      Status == "Alive" ~ 1,
+      Status == "Dead" ~ 0
+    ),
+    differentiate = case_when(
+      differentiate == "Well differentiated" ~ 1,
+      differentiate == "Moderately differentiated" ~ 2,
+      differentiate == "Poorly differentiated" ~ 3,
+      differentiate == "Undifferentiated" ~ 4
+    ),
+    Race = case_when(
+      Race == "White" ~ 1,
+      Race == "Black" ~ 2,
+      Race == "Other" ~ 3
+    ),
+    Estrogen.Status = case_when(
+      Estrogen.Status == "Positive" ~ 1,
+      Estrogen.Status == "Negative" ~ 0
+    ),
+    Progesterone.Status = case_when(
+      Progesterone.Status == "Positive" ~ 1,
+      Progesterone.Status == "Negative" ~ 0
+    )
+  )
 
-## Introduction  {.smaller}
+# survival objects 
+surv_object <- Surv(cleaned_data$Survival.Months, cleaned_data$Status)
 
--   Develop a storyline that captures attention and maintains interest.
+km_fit <- survfit(surv_object ~ AJCC_Stage, data = cleaned_data)
 
--   Your audience is your peers
+km_fit_er <- survfit(surv_object ~ Estrogen.Status, data = cleaned_data)
 
--   Clearly state the problem or question you're addressing.
+cox_model <- coxph(
+  Surv(Survival.Months, Status) ~ AJCC_Stage + Age + Race + differentiate + Tumor.Size,
+  data = cleaned_data
+)
 
--   Introduce why it is relevant needs.
+ph_test <- cox.zph(cox_model)
+```
 
--   Provide an overview of your approach.
+## Introduction {.smaller}
 
-In kernel estimator, weight function is known as kernel function
-[@efr2008]. Cite this paper [@bro2014principal]. The GEE [@wang2014].
-The PCA [@daffertshofer2004pca]\*
+- Breast cancer survival varies significantly across patients  
+- Understanding what drives survival differences is critical  
+- Tumor stage is a key clinical predictor  
+- Outcomes are influenced by multiple factors  
+
+**Goal:**  
+Evaluate how tumor stage impacts survival while adjusting for clinical and demographic variables  
+
+---
+
+## Research Question
+
+- Does tumor stage significantly impact survival?  
+- How does risk change across stages?  
+- Do other variables (age, tumor size, differentiation) matter?  
+
+**Hypothesis:**  
+Higher tumor stage → higher risk of death  
+
+---
+
+## Data Overview
+
+- Real-world breast cancer dataset  
+- Key variables:
+  - Survival time (months)
+  - Vital status (alive/dead)
+  - AJCC stage (I–IV)
+  - Age, race
+  - Tumor size & differentiation
+  - Hormone receptor status  
+
+---
 
 ## Methods
 
--   Detail the models or algorithms used.
+We used survival analysis techniques:
 
--   Justify your choices based on the problem and data.
+- Kaplan–Meier curves → compare survival across groups  
+- Log-rank test → test differences in survival  
+- Cox proportional hazards model → estimate effect of covariates  
 
+---
 
+## Kaplan–Meier Survival by AJCC Stage
 
-## Data Exploration and Visualization
-
--   Describe your data sources and collection process.
-
--   Present initial findings and insights through visualizations.
-
--   Highlight unexpected patterns or anomalies.
-
-## Data Exploration and Visualization {.smaller}
-
-A study was conducted to determine how...
-
-```{r, warning=FALSE, echo=F, message=FALSE}
-# loading packages 
-library(tidyverse)
-library(knitr)
-library(ggthemes)
-library(ggrepel)
-library(dslabs)
+```{r echo=FALSE}
+ggsurvplot(
+  km_fit,
+  data = cleaned_data,
+  risk.table = TRUE,
+  pval = TRUE,
+  conf.int = TRUE,
+  title = "Survival by AJCC Stage"
+)
 ```
+### Key Insights
+- Survival decreases as stage increases
+- Clear separation between stages
 
-```{r, warning=FALSE, echo=F}
-# Load Data
-#kable(head(murders))
-
-ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total)) 
-
-  ggplot1 + geom_point(aes(col=region), size = 4) +
-  geom_text_repel(aes(label=abb)) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(formula = "y~x", method=lm,se = F)+
-  xlab("Populations in millions (log10 scale)") + 
-  ylab("Total number of murders (log10 scale)") +
-  ggtitle("US Gun Murders in 2010") +
-  scale_color_discrete(name = "Region")+
-      theme_bw()
-  
-
-```
-
-## Modeling and Results
-
--   Explain your data preprocessing and cleaning steps.
-
--   Present your key findings in a clear and concise manner.
-
--   Use visuals to support your claims.
-
--   **Tell a story about what the data reveals.**
-
+## Survival by Estrogen Status
 ```{r}
-
+ggsurvplot(
+  km_fit_er,
+  data = cleaned_data,
+  risk.table = TRUE,
+  pval = TRUE,
+  conf.int = TRUE,
+  legend.labs = c("Negative", "Positive"),
+  title = "Survival by Estrogen Receptor Status"
+)
 ```
+### Key Insights
+- ER-positive patients show better survival
+- Hormone status is an important prognostic factor
+
+## Cox Proportional Hazards Model
+### Adjusted for: 
+- Tumor stage
+- Age
+- Race
+- Tumor size
+- Differentiation
+
+## Cox Proportional Hazards Model continued
+```{r echo=FALSE, fig.width=7, fig.height=4.5}
+summary(cox_model)
+ggforest(cox_model, data = cleaned_data)
+```
+## Cox Proportional Hazards Model continued
+### Key Insights
+- Tumor stage is the strongest predictor of survival
+- Higher stage → increased hazard of death
+
+## Proportional Hazards Assumption
+```{r}
+{echo=FALSE}
+ph_test
+plot(ph_test)
+```
+## Proportional Hazards Assumption continued
+### Key Insights
+- No major violations detected
+- Model assumptions are satisfied
+---
+## Key Findings
+- Higher tumor stage increases risk of death
+- Tumor size and differentiation are significant predictors
+- ER-positive status associated with improved survival
+- Results remain significant after adjustment
+
+## Discussion
+- Tumor stage is a strong independent predictor of survival
+- Survival is influenced by multiple clinical factors
+- Findings align with clinical expectations
 
 ## Conclusion
+- Tumor stage strongly impacts survival outcomes
+- Multivariable modeling improves risk estimation
+- Survival analysis provides meaningful clinical insights
 
--   Summarize your key findings.
-
--   Discuss the implications of your results.
-
-## References
+## Implications
+- Importance of early detection
+- Supports personalized treatment planning
+- Helps identify high-risk patients
