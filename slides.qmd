@@ -303,6 +303,16 @@ characteristics.
 Purpose: Ensure a rigorous, transparent process for modeling survival
 outcomes and interpreting the impact of tumor stage.
 
+## Cox Proportional Hazards Model
+
+```{r}
+
+# -----------------------------
+# Forest plot of hazard ratios
+# -----------------------------
+ggforest(cox_model, data = cleaned_data, main = "Figure 7. Hazard Ratios for Breast Cancer Survival")
+```
+
 ## Interpretation of Findings {.smaller}
 
 -   The Cox model showed that tumor stage is a strong, independent
