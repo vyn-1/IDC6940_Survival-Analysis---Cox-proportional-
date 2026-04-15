@@ -65,13 +65,13 @@ $$
 \hat{S}(t) = \prod_{t_i \le t} \left(1 - \frac{d_i}{n_i}\right)
 $$
 
-Where:  
+Where:
 
--   $$(t_i)$$ represents observed event times  
+-   $(t_i)$ represents observed event times
 
--   $$( d_i)$$ denotes the number of deaths at time $$( t_i )$$   
+-   $( d_i)$ denotes the number of deaths at time $( t_i )$
 
--   $$( n_i)$$ corresponds to the number of individuals at risk immediately prior to $$( t_i )$$  
+-   $( n_i)$ corresponds to the number of individuals at risk immediately prior to $( t_i )$
 
 Kaplan–Meier curves allow for visual comparison of survival distributions across categorical groups, such as tumor stage.
 Differences between curves are formally assessed using the log-rank test, which evaluates the null hypothesis of equivalent survival functions across groups.
@@ -87,11 +87,11 @@ $$
 
 Where:
 
--   $$h0(t)$$is the baseline hazard function representing the hazard when all covariates are zero
+-   $h0(t)$is the baseline hazard function representing the hazard when all covariates are zero
 
--   $$x$$denotes the vector of predictor variables (e.g., AJCC stage, age, tumor size, tumor differentiation)
+-   $x$denotes the vector of predictor variables (e.g., AJCC stage, age, tumor size, tumor differentiation)
 
--   $$eβ$$ is the hazard ratio (HR) quantifying the effect of each covariate on the hazard
+-   $eβ$ is the hazard ratio (HR) quantifying the effect of each covariate on the hazard
 
 **Interpretation:**
 
@@ -565,11 +565,12 @@ km_fit <- survfit(surv_object ~ AJCC_Stage, data = cleaned_data)
 ggsurvplot(km_fit,
 data = cleaned_data,
 risk.table = TRUE,
-risk.table.height = 0.25,
-risk.table.fontsize = 2,
+risk.table.height = 0.5,
+risk.table.fontsize = 4,
 pval = TRUE,
 conf.int = TRUE,
 legend.title = "AJCC Stage",
+legend = "right",
 xlab = "Months",
 ylab = "Survival Probability",
 palette = "Dark2",
@@ -577,6 +578,24 @@ title = "Figure 5. Kaplan–Meier Survival by AJCC Stage",
 risk.table.y.text.col = TRUE,
 risk.table.y.text = FALSE)
 ```
+**This figure illustrates differences in patient survival probabilities over time across AJCC cancer stages to assess the association between stage at diagnosis and survival outcomes.**
+
+### Kaplan–Meier survival curves by estrogen
+
+```{r}
+km_fit_er <- survfit(surv_object ~ Estrogen.Status, data = cleaned_data)
+
+ggsurvplot(
+  km_fit_er,
+  data = cleaned_data,
+  risk.table = TRUE,
+  pval = TRUE,
+  conf.int = TRUE,
+  legend.title = "ER Status",
+  legend.labs = c("Negative", "Positive")
+)
+```
+**This figure shows survival probabilities over time by estrogen receptor status to evaluate the relationship between hormone receptor expression and patient survival.**
 
 ## 5. Discussion
 
@@ -592,6 +611,7 @@ Hormone receptor status, when significant, provides insight into tumor responsiv
 Importantly, the proportional hazards assumption was satisfied for the final model, indicating that the estimated hazard ratios remained stable over time and that the model appropriately captured the relationship between covariates and survival.
 From a clinical perspective, these findings underscore the critical importance of early detection and accurate staging at diagnosis.
 The strong association between higher tumor stage and increased mortality risk highlights the need for timely screening, diagnostic evaluation, and equitable access to care.
+
 By quantifying the relative impact of stage and other clinical features on survival, the Cox model provides valuable information that can support individualized treatment planning and follow-up strategies.
 Overall, this analysis reinforces the central role of tumor stage in predicting breast cancer survival and demonstrates the utility of the Cox proportional hazards model in evaluating complex clinical datasets.
 
@@ -609,117 +629,90 @@ Overall, this analysis contributes to a deeper understanding of survival pattern
 
 # References
 
-Deo, S. V., Deo, V., & Sundaram, V. (2021).
-Survival analysis-part 2: Cox proportional hazards model.
-Indian journal of thoracic and cardiovascular surgery, 37(2), 229–233.
-https://doi.org/10.1007/s12055-020-01108-7
-
-Smith, T., Smith, B., & Ryan, M. A.
-(2003, March).
-Survival analysis using Cox proportional hazards modeling for single and multiple event time data.
-In Proceedings of the twenty-eighth annual SAS users group international conference, SAS Institute, Inc, Cary, paper (pp. 254-228).
-
-George, B., Seals, S., & Aban, I.
-(2014).
-Survival analysis and regression models.
-Journal of nuclear cardiology, 21(4), 686-694.
-
-Bustan, M. N., Aidid, M., & Gobel, F. A.
-(2018, June).
-Cox proportional hazard survival analysis to inpatient breast cancer cases.
-In Journal of Physics: Conference Series (Vol. 1028, No. 1).
-IOP Publishing.
-
-Su, P. F., Lin, C. C. K., Hung, J. Y., & Lee, J. S.
-(2022).
-The proper use and reporting of survival analysis and cox regression.
-World Neurosurgery, 161, 303-309.
-
-Abadi, A., Yavari, P., Dehghani-Arani, M., Alavi-Majd, H., Ghasemi, E., Amanpour, F., & Bajdik, C.
-(2014).
+Abadi, A., Yavari, P., Dehghani-Arani, M., Alavi-Majd, H., Ghasemi, E., Amanpour, F., & Bajdik, C. (2014).
 Cox models survival analysis based on breast cancer treatments.
-Iranian journal of cancer prevention, 7(3), 124–129.
+Iranian Journal of Cancer Prevention, 7(3), 124–129.
 
-Ali S, Hamam D, Liu X and Lebrun J-J (2022) Terminal differentiation and anti-tumorigenic effects of prolactin in breast cancer.
-Front.
-Endocrinol.
-13:993570.
-doi: 10.3389/fendo.2022.993570
+Ali, S., Hamam, D., Liu, X., & Lebrun, J.-J. (2022).
+Terminal differentiation and anti-tumorigenic effects of prolactin in breast cancer.
+Frontiers in Endocrinology, 13, 993570. https://doi.org/10.3389/fendo.2022.993570
 
-Koh, J., & Kim, M. J.
-(2019).
-Introduction of a New Staging System of Breast Cancer for Radiologists: An Emphasis on the Prognostic Stage.
-Korean journal of radiology, 20(1), 69–82.
-https://doi.org/10.3348/kjr.2018.0231
-
-Nadia Howlader, Kathleen A. Cronin, Allison W. Kurian, Rebecca Andridge; Differences in Breast Cancer Survival by Molecular Subtypes in the United States.
-Cancer Epidemiol Biomarkers Prev 1 June 2018; 27 (6): 619–626.
-https://doi.org/10.1158/1055-9965.EPI-17-0627
-
-Bewick, V., Cheek, L., & Ball, J.
-(2004).
-Statistics review 12: survival analysis.
-Critical care (London, England), 8(5), 389–394.
-https://doi.org/10.1186/cc2955
-
-Bradburn, M. J., Clark, T. G., Love, S. B., & Altman, D. G.
-(2003).
-Survival analysis part II: multivariate data analysis--an introduction to concepts and methods.
-British journal of cancer, 89(3), 431–436.
-https://doi.org/10.1038/sj.bjc.6601119
-
-Xu, M., Shan, D., Zhang, R., Li, J., Guo, L., Chen, X., & Qu, J.
-(2025).
-Differentiation of breast cancer subtypes and correlation with biological status using functional magnetic resonance imaging: comparison with amide proton transfer-weighted imaging and diffusion-weighted imaging.
-Quantitative imaging in medicine and surgery, 15(7), 6102–6117.
-https://doi.org/10.21037/qims-24-2174
-
-Breast Cancer Stages \| Understanding Breast Cancer Staging.
-(2025, December 2).
-Cancer.gov.
-https://www.cancer.gov/types/breast/stages ‌
-
-Anderson, W. F., Rosenberg, P. S., Prat, A., Perou, C. M., & Sherman, M. E.
-(2019).
-
+Anderson, W. F., Rosenberg, P. S., Prat, A., Perou, C. M., & Sherman, M. E. (2019).
 How many etiological subtypes of breast cancer: Two, three, four, or more?
 Journal of the National Cancer Institute, 111(3), 258–269.
-Bland, J. M., & Altman, D. G.
-(2004).
 
+Bewick, V., Cheek, L., & Ball, J. (2004).
+Statistics review 12: Survival analysis.
+Critical Care, 8(5), 389–394. https://doi.org/10.1186/cc2955
+
+Bland, J. M., & Altman, D. G. (2004).
 The logrank test.
 BMJ, 328(7447), 1073.
-Cox, D. R.
-(1972).
 
-Regression models and life‑tables.
+Bradburn, M. J., Clark, T. G., Love, S. B., & Altman, D. G. (2003).
+Survival analysis part II: Multivariate data analysis—An introduction to concepts and methods.
+British Journal of Cancer, 89(3), 431–436. https://doi.org/10.1038/sj.bjc.6601119
+
+Breast cancer stages | Understanding breast cancer staging. (2025, December 2).
+Cancer.gov. https://www.cancer.gov/types/breast/stages
+
+Bustan, M. N., Aidid, M., & Gobel, F. A. (2018, June).
+Cox proportional hazard survival analysis to inpatient breast cancer cases.
+In Journal of Physics: Conference Series (Vol. 1028, No. 1). IOP Publishing.
+
+Cox, D. R. (1972).
+Regression models and life-tables.
 Journal of the Royal Statistical Society: Series B, 34(2), 187–220.
-Hernán, M. A.
-(2010).
 
+Deo, S. V., Deo, V., & Sundaram, V. (2021).
+Survival analysis—Part 2: Cox proportional hazards model.
+Indian Journal of Thoracic and Cardiovascular Surgery, 37(2), 229–233.
+https://doi.org/10.1007/s12055-020-01108-7
+
+George, B., Seals, S., & Aban, I. (2014).
+Survival analysis and regression models.
+Journal of Nuclear Cardiology, 21(4), 686–694.
+
+Hernán, M. A. (2010).
 The hazards of hazard ratios.
 Epidemiology, 21(1), 13–15.
-Hosmer, D. W., Lemeshow, S., & May, S.
-(2008).
 
-Applied survival analysis: Regression modeling of time‑to‑event data (2nd ed.).
-Wiley.
+Hosmer, D. W., Lemeshow, S., & May, S. (2008).
+Applied survival analysis: Regression modeling of time-to-event data (2nd ed.). Wiley.
+
+Howlader, N., Cronin, K. A., Kurian, A. W., & Andridge, R. (2018).
+Differences in breast cancer survival by molecular subtypes in the United States.
+Cancer Epidemiology, Biomarkers & Prevention, 27(6), 619–626.
+https://doi.org/10.1158/1055-9965.EPI-17-0627
+
 Kaplan, E. L., & Meier, P. (1958).
-
 Nonparametric estimation from incomplete observations.
 Journal of the American Statistical Association, 53(282), 457–481.
-Kleinbaum, D. G., & Klein, M.
-(2012).
 
-Survival analysis: A self‑learning text (3rd ed.).
-Springer.
-Therneau, T. M., & Grambsch, P. M.
-(2000).
+Kleinbaum, D. G., & Klein, M. (2012).
+Survival analysis: A self-learning text (3rd ed.). Springer.
 
-Modeling survival data: Extending the Cox model.
-Springer.
-Wei, L. J.
-(1992).
+Koh, J., & Kim, M. J. (2019).
+Introduction of a new staging system of breast cancer for radiologists: An emphasis on the prognostic stage.
+Korean Journal of Radiology, 20(1), 69–82.
+https://doi.org/10.3348/kjr.2018.0231
 
+Smith, T., Smith, B., & Ryan, M. A. (2003, March).
+Survival analysis using Cox proportional hazards modeling for single and multiple event time data.
+In Proceedings of the Twenty-Eighth Annual SAS Users Group International Conference (pp. 254–228).
+
+Su, P. F., Lin, C. C. K., Hung, J. Y., & Lee, J. S. (2022).
+The proper use and reporting of survival analysis and Cox regression.
+World Neurosurgery, 161, 303–309.
+
+Therneau, T. M., & Grambsch, P. M. (2000).
+Modeling survival data: Extending the Cox model. Springer.
+
+Wei, L. J. (1992).
 The accelerated failure time model: A useful alternative to the Cox regression model in survival analysis.
 Statistics in Medicine, 11(14–15), 1871–1879.
+
+Xu, M., Shan, D., Zhang, R., Li, J., Guo, L., Chen, X., & Qu, J. (2025).
+Differentiation of breast cancer subtypes and correlation with biological status using functional magnetic resonance imaging: Comparison with amide proton transfer-weighted imaging and diffusion-weighted imaging.
+Quantitative Imaging in Medicine and Surgery, 15(7), 6102–6117.
+https://doi.org/10.21037/qims-24-2174

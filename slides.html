@@ -1158,7 +1158,7 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 
   <p class="date">2026-04-15</p>
 </section>
-<section id="what-is-survival-analysis" class="slide level2 smaller">
+<section id="what-is-survival-analysis" class="slide level2">
 <h2>What is Survival Analysis?</h2>
 <ul>
 <li>Models time‑to‑event outcomes (e.g., death, recurrence, progression)</li>
@@ -1167,7 +1167,7 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 <li>Traditional regression fails because it cannot properly account for censoring</li>
 </ul>
 </section>
-<section id="key-methods-kaplanmeier-cox-model" class="slide level2">
+<section id="key-methods-kaplanmeier-cox-model" class="slide level2 smaller">
 <h2>Key Methods: Kaplan–Meier &amp; Cox Model</h2>
 <p>Kaplan–Meier Estimator (1958)</p>
 <ul>
@@ -1183,7 +1183,7 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 <li><p>Widely used due to flexibility and interpretability</p></li>
 </ul>
 </section>
-<section id="importance-of-the-cox-model-in-breast-cancer-research" class="slide level2">
+<section id="importance-of-the-cox-model-in-breast-cancer-research" class="slide level2 smaller">
 <h2>Importance of the Cox Model in Breast Cancer Research</h2>
 <ul>
 <li><p>Breast cancer studies often involve variable follow‑up times and censored observations, making survival analysis essential</p></li>
@@ -1195,35 +1195,18 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 <li><p>Treatment type (surgery, chemotherapy, radiation, hormonal therapy)</p></li>
 <li><p>Patient age and other demographic factors</p></li>
 </ul></li>
+</ul>
+</section>
+<section id="importance-of-the-cox-model-in-breast-cancer-research-continued" class="slide level2">
+<h2>Importance of the Cox Model in Breast Cancer Research Continued</h2>
+<ul>
 <li><p>Provides adjusted hazard estimates, enabling comparison of multiple predictors simultaneously</p></li>
 <li><p>Helps identify prognostic factors associated with recurrence or mortality</p></li>
 <li><p>Supports clinical decision‑making by clarifying which variables meaningfully affect patient outcomes</p></li>
 </ul>
 </section>
-<section id="methods" class="slide level2">
+<section id="methods" class="slide level2 scrollable">
 <h2>Methods</h2>
-<ul>
-<li><p>Objective: Evaluate how tumor stage at diagnosis influences survival time in breast cancer patients</p></li>
-<li><p>Hypothesis: Higher AJCC stage → worse survival outcomes</p></li>
-<li><p>Dataset included:</p>
-<ul>
-<li><p>Demographics: age, race</p></li>
-<li><p>Clinical variables: tumor size, differentiation, ER/PR status</p></li>
-<li><p>Nodal information: regional nodes examined &amp; positive</p></li>
-<li><p>Survival data: survival months, event status</p></li>
-</ul></li>
-<li><p>Analytical Strategy:</p>
-<ul>
-<li><p>Log‑rank tests to compare survival distributions across tumor stages</p></li>
-<li><p>Cox proportional hazards model to quantify the association between tumor stage and hazard of death</p></li>
-<li><p>Adjusted for relevant covariates to reduce confounding</p></li>
-</ul></li>
-<li><p>Software: All analyses conducted in R</p></li>
-<li><p>Model diagnostics: Checked proportional hazards assumption and overall model validity</p></li>
-</ul>
-</section>
-<section id="key-equations-interpretation" class="slide level2">
-<h2>Key Equations &amp; Interpretation</h2>
 <p><strong>Cox Proportional Hazards Model</strong></p>
 <p>h(t∣X)=h0(t)exp⁡(β1X1+β2X2+⋯+βpXp)</p>
 <ul>
@@ -1245,14 +1228,44 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 <li><p>Allows individualized survival predictions</p></li>
 </ul>
 </section>
-<section id="assumptions-limitations-of-the-cox-model" class="slide level2">
-<h2>Assumptions &amp; Limitations of the Cox Model</h2>
+<section id="modeling" class="slide level2 smaller">
+<h2>Modeling</h2>
+<ul>
+<li><p>Objective: Evaluate how tumor stage at diagnosis influences survival time in breast cancer patients</p></li>
+<li><p>Hypothesis: Higher AJCC stage → worse survival outcomes</p></li>
+<li><p>Dataset included:</p>
+<ul>
+<li><p>Demographics: age, race</p></li>
+<li><p>Clinical variables: tumor size, differentiation, ER/PR status</p></li>
+<li><p>Nodal information: regional nodes examined &amp; positive</p></li>
+<li><p>Survival data: survival months, event status</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="modeling-continued" class="slide level2 smaller">
+<h2>Modeling Continued</h2>
+<ul>
+<li><p>Analytical Strategy:</p>
+<ul>
+<li><p>Log‑rank tests to compare survival distributions across tumor stages</p></li>
+<li><p>Cox proportional hazards model to quantify the association between tumor stage and hazard of death</p></li>
+<li><p>Adjusted for relevant covariates to reduce confounding</p></li>
+</ul></li>
+<li><p>Software: All analyses conducted in R</p></li>
+<li><p>Model diagnostics: Checked proportional hazards assumption and overall model validity</p></li>
+</ul>
+</section>
+<section id="assumptions-of-the-cox-model" class="slide level2">
+<h2>Assumptions of the Cox Model</h2>
 <p><strong>Key Assumptions</strong></p>
 <ul>
 <li><p>Proportional hazards: HRs remain constant over time</p></li>
 <li><p>Accurate event measurement: Correct survival times and censoring indicators Independent censoring: Censoring unrelated to event risk</p></li>
 <li><p>Correct model specification: Relevant covariates included; functional forms appropriate</p></li>
 </ul>
+</section>
+<section id="limitations-of-the-cox-model" class="slide level2">
+<h2>Limitations of the Cox Model</h2>
 <p><strong>Limitations</strong></p>
 <ul>
 <li><p>Assumption violations: Non‑proportional hazards can bias results</p></li>
@@ -1262,10 +1275,14 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 <li><p>Time‑dependent bias: Misclassified exposure time → immortal time bias</p></li>
 </ul>
 </section>
-<section id="dataset-overview" class="slide level2">
+<section id="dataset-overview" class="slide level2 smaller">
 <h2>Dataset Overview</h2>
 <ul>
-<li><p>Real‑world breast cancer dataset with demographic, clinical, and tumor‑specific variables</p></li>
+<li>Real‑world breast cancer dataset with demographic, clinical, and tumor‑specific variables</li>
+</ul>
+<p>Purpose: Provide the necessary inputs to evaluate how tumor stage influences survival while adjusting for key patient and tumor characteristics.</p>
+<h3 class="smaller" id="data-overview-continued">Data Overview Continued</h3>
+<ul>
 <li><p>Outcome variables:</p>
 <ul>
 <li><p>Survival time (months)</p></li>
@@ -1283,9 +1300,8 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 <li><p>Tumor differentiation</p></li>
 </ul></li>
 </ul>
-<p>Purpose: Provide the necessary inputs to evaluate how tumor stage influences survival while adjusting for key patient and tumor characteristics.</p>
 </section>
-<section id="analytical-workflow" class="slide level2">
+<section id="analytical-workflow" class="slide level2 smaller">
 <h2>Analytical Workflow</h2>
 <ol type="1">
 <li><p>Load and inspect dataset for completeness and consistency</p></li>
@@ -1299,27 +1315,37 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 </ol>
 <p>Purpose: Ensure a rigorous, transparent process for modeling survival outcomes and interpreting the impact of tumor stage.</p>
 </section>
-<section id="interpretation-of-findings" class="slide level2">
+<section id="interpretation-of-findings" class="slide level2 smaller">
 <h2>Interpretation of Findings</h2>
 <ul>
 <li><p>The Cox model showed that tumor stage is a strong, independent predictor of survival, even after adjusting for demographic and tumor‑specific factors</p></li>
 <li><p>Higher AJCC stage corresponded to a substantial increase in hazard of death, reflecting expected disease progression</p></li>
 <li><p>Significant covariates (tumor size, differentiation, nodal involvement) highlight the multifactorial nature of breast cancer outcomes</p></li>
+</ul>
+</section>
+<section id="interpretation-of-findings-continued" class="slide level2 smaller">
+<h2>Interpretation of Findings Continued</h2>
+<ul>
 <li><p>Hormone receptor status, when significant, provides insight into treatment responsiveness and supports clinical risk stratification</p></li>
 <li><p>The proportional hazards assumption was satisfied, indicating stable hazard ratios over time and confirming model appropriateness</p></li>
 </ul>
 </section>
-<section id="clinical-implications" class="slide level2">
+<section id="clinical-implications" class="slide level2 smaller">
 <h2>Clinical Implications</h2>
 <ul>
 <li><p>Results emphasize the importance of accurate staging at diagnosis, as stage remains a powerful prognostic indicator</p></li>
 <li><p>Findings align with established clinical understanding that advanced disease leads to poorer outcomes</p></li>
 <li><p>The significance of multiple covariates underscores the need for comprehensive clinical assessment, not stage alone</p></li>
+</ul>
+</section>
+<section id="clinical-implications-continued" class="slide level2 smaller">
+<h2>Clinical Implications Continued</h2>
+<ul>
 <li><p>Demonstrates how survival analysis integrates diverse clinical features to support personalized treatment planning</p></li>
 <li><p>Reinforces the value of the Cox model for analyzing real‑world clinical datasets with censoring and variable follow‑up</p></li>
 </ul>
 </section>
-<section id="summary-of-key-findings" class="slide level2">
+<section id="summary-of-key-findings" class="slide level2 smaller">
 <h2>Summary of Key Findings</h2>
 <ul>
 <li><p>Higher AJCC tumor stage was strongly associated with increased hazard of death</p></li>
@@ -1328,7 +1354,7 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 <li><p>The Cox model provided a clear, interpretable framework for quantifying risk across stages and covariates</p></li>
 </ul>
 </section>
-<section id="final-takeaways" class="slide level2">
+<section id="final-takeaways" class="slide level2 smaller">
 <h2>Final Takeaways</h2>
 <ul>
 <li><p>Results highlight the importance of early detection, timely diagnosis, and equitable access to screening and treatment</p></li>
