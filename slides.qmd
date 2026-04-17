@@ -134,7 +134,7 @@ Cox Proportional Hazards Model (1972)
         therapy)
 
     -   Patient age and other demographic factors
-    
+
 ## Importance of the Cox Model in Breast Cancer Research Continued
 
 -   Provides adjusted hazard estimates, enabling comparison of multiple
@@ -198,7 +198,7 @@ S\^(t∣X)=\[S\^0(t)\]exp⁡(βX)
     -   Nodal information: regional nodes examined & positive
 
     -   Survival data: survival months, event status
-    
+
 ------------------------------------------------------------------------
 
 ## Modeling Continued {.smaller}
@@ -219,7 +219,6 @@ S\^(t∣X)=\[S\^0(t)\]exp⁡(βX)
     overall model validity
 
 ------------------------------------------------------------------------
-
 
 ## Assumptions of the Cox Model
 
@@ -253,7 +252,7 @@ S\^(t∣X)=\[S\^0(t)\]exp⁡(βX)
 
 -   Real‑world breast cancer dataset with demographic, clinical, and
     tumor‑specific variables
-    
+
 Purpose: Provide the necessary inputs to evaluate how tumor stage
 influences survival while adjusting for key patient and tumor
 characteristics.
@@ -280,7 +279,6 @@ characteristics.
 
     -   Tumor differentiation
 
-
 ## Analytical Workflow {.smaller}
 
 1.  Load and inspect dataset for completeness and consistency
@@ -303,6 +301,42 @@ characteristics.
 Purpose: Ensure a rigorous, transparent process for modeling survival
 outcomes and interpreting the impact of tumor stage.
 
+
+
+## Kaplan–Meier survival curves by stage
+
+```{r}
+ggsurvplot(km_fit,
+data = cleaned_data,
+risk.table = TRUE,
+risk.table.height = 0.5,
+risk.table.fontsize = 4,
+pval = TRUE,
+conf.int = TRUE,
+legend.title = "AJCC Stage",
+legend = "right",
+xlab = "Months",
+ylab = "Survival Probability",
+palette = "Dark2",
+title = "Figure 5. Kaplan–Meier Survival by AJCC Stage",
+risk.table.y.text.col = TRUE,
+risk.table.y.text = FALSE)
+```
+
+## Kaplan–Meier survival curves by estrogen
+
+```{r}
+ggsurvplot(
+  km_fit_er,
+  data = cleaned_data,
+  risk.table = TRUE,
+  pval = TRUE,
+  conf.int = TRUE,
+  legend.title = "ER Status",
+  legend.labs = c("Negative", "Positive")
+)
+```
+
 ## Cox Proportional Hazards Model
 
 ```{r}
@@ -312,73 +346,49 @@ outcomes and interpreting the impact of tumor stage.
 # -----------------------------
 ggforest(cox_model, data = cleaned_data, main = "Figure 7. Hazard Ratios for Breast Cancer Survival")
 ```
+**explanation: Forest plot showing significant and non‑significant predictors of breast cancer survival.**
 
 ## Interpretation of Findings {.smaller}
 
--   The Cox model showed that tumor stage is a strong, independent
-    predictor of survival, even after adjusting for demographic and
-    tumor‑specific factors
+-   The Cox model did not show AJCC tumor stage as a significant
+    independent predictor of survival after adjustment
 
--   Higher AJCC stage corresponded to a substantial increase in hazard
-    of death, reflecting expected disease progression
+-   This contrasts with the original hypothesis and suggests that
+    stage’s prognostic effect may be explained by other tumor
+    characteristics
 
--   Significant covariates (tumor size, differentiation, nodal
-    involvement) highlight the multifactorial nature of breast cancer
-    outcomes
+-   Tumor differentiation was significantly associated with survival,
+    with poorer differentiation linked to higher hazard of death
 
-## Interpretation of Findings Continued {.smaller}
+-   Estrogen receptor status also emerged as a significant predictor,
+    highlighting the importance of tumor biology
 
--   Hormone receptor status, when significant, provides insight into
-    treatment responsiveness and supports clinical risk stratification
+-   Age, race, and tumor size were not significant in the adjusted model
 
 -   The proportional hazards assumption was satisfied, indicating stable
-    hazard ratios over time and confirming model appropriateness
+    hazard ratios over time
 
 ## Clinical Implications {.smaller}
 
--   Results emphasize the importance of accurate staging at diagnosis,
-    as stage remains a powerful prognostic indicator
-
--   Findings align with established clinical understanding that advanced
-    disease leads to poorer outcomes
-
--   The significance of multiple covariates underscores the need for
-    comprehensive clinical assessment, not stage alone
-    
-## Clinical Implications Continued {.smaller}
-
--   Demonstrates how survival analysis integrates diverse clinical
-    features to support personalized treatment planning
-
--   Reinforces the value of the Cox model for analyzing real‑world
-    clinical datasets with censoring and variable follow‑up
+Results emphasize the importance of comprehensive tumor profiling, not stage alone, in predicting survival
+Significant effects of differentiation and hormone receptor status highlight the value of biological markers in treatment planning
+Findings suggest that traditional staging may not fully capture prognosis when biological features are considered
+Supports individualized care strategies that integrate pathology, receptor status, and tumor behavior
+Demonstrates how survival analysis can reveal nuanced relationships in real‑world clinical datasets
 
 ## Summary of Key Findings {.smaller}
 
--   Higher AJCC tumor stage was strongly associated with increased
-    hazard of death
+AJCC tumor stage was not a significant independent predictor of survival in the adjusted model
+The original hypothesis was not supported by the multivariable analysis
+Tumor differentiation and estrogen receptor status were the only significant predictors of mortality
+The Cox model provided a clear framework for evaluating multiple clinical and pathological factors simultaneously
+Results highlight the multifactorial nature of breast cancer prognosis
 
--   This relationship remained significant after adjusting for age,
-    race, tumor size, differentiation, hormone receptor status, and
-    nodal involvement
-
--   Findings support the study’s hypothesis and confirm tumor stage as a
-    central prognostic factor in breast cancer survival
-
--   The Cox model provided a clear, interpretable framework for
-    quantifying risk across stages and covariates
 
 ## Final Takeaways {.smaller}
 
--   Results highlight the importance of early detection, timely
-    diagnosis, and equitable access to screening and treatment
-
--   Quantifying risk across clinical features supports individualized
-    treatment planning and follow‑up strategies
-
--   The analysis enhances understanding of survival patterns in breast
-    cancer and demonstrates the continued value of the Cox model in
-    evaluating complex clinical datasets
-
--   Overall, the study reinforces tumor stage as a key driver of patient
-    outcomes
+Prognosis in breast cancer is shaped by biological characteristics, not just anatomical stage
+Hormone receptor status and tumor differentiation play key roles in survival and treatment decisions
+Comprehensive diagnostic evaluation remains essential for accurate risk stratification
+Quantifying risk across multiple tumor features supports personalized follow‑up and management
+The Cox model remains a powerful tool for analyzing survival in complex clinical datasets

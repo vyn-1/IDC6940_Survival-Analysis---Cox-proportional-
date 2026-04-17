@@ -510,7 +510,7 @@ Fit Cox model adjusting for covariates<br> Report hazard ratios and confidence i
 # Fit Cox proportional hazards model
 # -----------------------------
 cox_model <- coxph(
-  Surv(Survival.Months, Status) ~ AJCC_Stage + Age + Race + differentiate + Tumor.Size,
+  Surv(Survival.Months, Status) ~ AJCC_Stage + Age + Race + differentiate + Tumor.Size + Estrogen.Status,
   data = cleaned_data
 )
 
