@@ -257,7 +257,7 @@ Purpose: Provide the necessary inputs to evaluate how tumor stage
 influences survival while adjusting for key patient and tumor
 characteristics.
 
-### Data Overview Continued {.smaller}
+## Data Overview Continued {.smaller}
 
 -   Outcome variables:
 
@@ -301,9 +301,7 @@ characteristics.
 Purpose: Ensure a rigorous, transparent process for modeling survival
 outcomes and interpreting the impact of tumor stage.
 
-
-
-## Kaplan–Meier survival curves by stage
+## Kaplan–Meier Survival Curves by Stage
 
 ```{r}
 ggsurvplot(km_fit,
@@ -323,7 +321,7 @@ risk.table.y.text.col = TRUE,
 risk.table.y.text = FALSE)
 ```
 
-## Kaplan–Meier survival curves by estrogen
+## Kaplan–Meier Survival Curves by Estrogen
 
 ```{r}
 ggsurvplot(
@@ -333,35 +331,41 @@ ggsurvplot(
   pval = TRUE,
   conf.int = TRUE,
   legend.title = "ER Status",
-  legend.labs = c("Negative", "Positive")
+  legend.labs = c("Negative", "Positive"),
+  title = "Figure 6. Kaplan–Meier Survival by Estrogen",
 )
 ```
 
 ## Cox Proportional Hazards Model
 
 ```{r}
+# Fit Cox proportional hazards model
 
-# -----------------------------
+cox_model <- coxph(
+  Surv(Survival.Months, Status) ~ AJCC_Stage + Age + Race + differentiate + Tumor.Size + Estrogen.Status,
+  data = cleaned_data
+)
 # Forest plot of hazard ratios
-# -----------------------------
 ggforest(cox_model, data = cleaned_data, main = "Figure 7. Hazard Ratios for Breast Cancer Survival")
 ```
-**explanation: Forest plot showing significant and non‑significant predictors of breast cancer survival.**
+
+**Explanation:** Forest plot showing significant and non‑significant
+predictors of breast cancer survival.
 
 ## Interpretation of Findings {.smaller}
 
--   The Cox model did not show AJCC tumor stage as a significant
-    independent predictor of survival after adjustment
+-   The Cox model did **not** show AJCC tumor stage as a significant independent predictor of survival after adjustment
 
--   This contrasts with the original hypothesis and suggests that
-    stage’s prognostic effect may be explained by other tumor
-    characteristics
+-   This contrasts with the original hypothesis and suggests that stage’s prognostic effect may be explained by other tumor
+characteristics
 
--   Tumor differentiation was significantly associated with survival,
-    with poorer differentiation linked to higher hazard of death
+-   **Tumor differentiation** was significantly associated with
+survival, with poorer differentiation linked to higher hazard of death
 
--   Estrogen receptor status also emerged as a significant predictor,
-    highlighting the importance of tumor biology
+## Interpretation of Findings Continued {.smaller}
+
+-   **Estrogen receptor status** also emerged as a significant
+    predictor, highlighting the importance of tumor biology
 
 -   Age, race, and tumor size were not significant in the adjusted model
 
@@ -370,25 +374,51 @@ ggforest(cox_model, data = cleaned_data, main = "Figure 7. Hazard Ratios for Bre
 
 ## Clinical Implications {.smaller}
 
-Results emphasize the importance of comprehensive tumor profiling, not stage alone, in predicting survival
-Significant effects of differentiation and hormone receptor status highlight the value of biological markers in treatment planning
-Findings suggest that traditional staging may not fully capture prognosis when biological features are considered
-Supports individualized care strategies that integrate pathology, receptor status, and tumor behavior
-Demonstrates how survival analysis can reveal nuanced relationships in real‑world clinical datasets
+-   Results emphasize the importance of **comprehensive** tumor
+    profiling, not stage alone, in predicting survival
+
+-   Significant effects of differentiation and hormone receptor status
+    highlight the value of **biological markers** in treatment planning
+
+-   Findings suggest that traditional staging may not fully capture
+    prognosis when biological features are considered
+
+-   Supports individualized care strategies that integrate pathology,
+    receptor status, and tumor behavior
+
+-   Demonstrates how survival analysis can reveal nuanced relationships
+    in real‑world clinical data sets
 
 ## Summary of Key Findings {.smaller}
 
-AJCC tumor stage was not a significant independent predictor of survival in the adjusted model
-The original hypothesis was not supported by the multivariable analysis
-Tumor differentiation and estrogen receptor status were the only significant predictors of mortality
-The Cox model provided a clear framework for evaluating multiple clinical and pathological factors simultaneously
-Results highlight the multifactorial nature of breast cancer prognosis
+-   AJCC tumor stage was **not** a significant independent predictor of
+    survival in the adjusted model
 
+-   The original hypothesis was **not supported** by the multivariable
+    analysis
+
+-   Tumor differentiation and estrogen receptor status were the only
+    significant predictors of mortality
+
+-   The Cox model provided a clear framework for evaluating multiple
+    clinical and pathological factors simultaneously
+
+-   Results highlight the multi-factorial nature of breast cancer
+    prognosis
 
 ## Final Takeaways {.smaller}
 
-Prognosis in breast cancer is shaped by biological characteristics, not just anatomical stage
-Hormone receptor status and tumor differentiation play key roles in survival and treatment decisions
-Comprehensive diagnostic evaluation remains essential for accurate risk stratification
-Quantifying risk across multiple tumor features supports personalized follow‑up and management
-The Cox model remains a powerful tool for analyzing survival in complex clinical datasets
+-   Prognosis in breast cancer is shaped by **biological
+    characteristics**, not just anatomical stage
+
+-   Hormone receptor status and tumor differentiation play key roles in
+    survival and treatment decisions
+
+-   Comprehensive diagnostic evaluation remains essential for accurate
+    risk stratification
+
+-   Quantifying risk across multiple tumor features supports
+    personalized follow‑up and management
+
+-   The Cox model remains a powerful tool for analyzing survival in
+    complex clinical data sets
