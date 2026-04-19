@@ -152,7 +152,7 @@ Cox Proportional Hazards Model (1972)
 
 **Cox Proportional Hazards Model**
 
-h(t∣X)=h0(t)exp⁡(β1X1+β2X2+⋯+βpXp)
+$$h(t∣X)=h0(t)exp⁡(β1X1+β2X2+⋯+βpXp) $$
 
 -   h0(t): baseline hazard
 
@@ -168,12 +168,17 @@ h(t∣X)=h0(t)exp⁡(β1X1+β2X2+⋯+βpXp)
 
 -   Represents multiplicative change in hazard for a one‑unit increase
     in a covariate
+    
+**Hazard Ratio**
 
-HR=eβ
+The hazard ratio represents the multiplicative change in the hazard associated with a one‑unit increase in a covariate.
+Values greater than 1 indicate increased risk, while values less than 1 indicate reduced risk.
+
+$$HR=eβ$$
 
 **Predicted Survival Function**
 
-S\^(t∣X)=\[S\^0(t)\]exp⁡(βX)
+$$S\^(t∣X)=\[S\^0(t)\]exp⁡(βX) $$
 
 -   Adjusts baseline survival curve according to patient‑specific
     covariates
@@ -278,6 +283,9 @@ characteristics.
     -   Tumor size
 
     -   Tumor differentiation
+    
+    -   Estrogen
+    
 
 ## Analytical Workflow {.smaller}
 

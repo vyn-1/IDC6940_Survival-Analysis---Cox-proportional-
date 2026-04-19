@@ -153,7 +153,7 @@ Analyses were conducted using a real-world breast cancer dataset containing demo
 Key variables include:\
 - **Outcome:** Survival time (months) and event status (death vs. censored)\
 - **Primary predictor:** AJCC 6th edition tumor stage\
-- **Covariates:** Age, race, tumor size, and tumor differentiation
+- **Covariates:** Age, race, tumor size, estrogen and tumor differentiation
 
 The analytical workflow comprised the following steps:\
 1.

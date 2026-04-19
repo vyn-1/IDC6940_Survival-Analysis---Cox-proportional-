@@ -444,7 +444,7 @@
   <meta name="generator" content="quarto-1.5.57">
 
   <meta name="author" content="Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)">
-  <meta name="dcterms.date" content="2026-04-17">
+  <meta name="dcterms.date" content="2026-04-19">
   <title>Survival Differences by Tumor Stage in Breast Cancer</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1156,7 +1156,7 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 </div>
 </div>
 
-  <p class="date">2026-04-17</p>
+  <p class="date">2026-04-19</p>
 </section>
 <section id="what-is-survival-analysis" class="slide level2">
 <h2>What is Survival Analysis?</h2>
@@ -1208,7 +1208,7 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 <section id="methods" class="slide level2 scrollable">
 <h2>Methods</h2>
 <p><strong>Cox Proportional Hazards Model</strong></p>
-<p>h(t∣X)=h0(t)exp⁡(β1X1+β2X2+⋯+βpXp)</p>
+<p><span class="math display">\[h(t∣X)=h0(t)exp⁡(β1X1+β2X2+⋯+βpXp) \]</span></p>
 <ul>
 <li><p>h0(t): baseline hazard</p></li>
 <li><p>X: covariates (e.g., stage, age, tumor size, differentiation)</p></li>
@@ -1220,9 +1220,11 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 <li><p>HR &lt; 1: decreased risk</p></li>
 <li><p>Represents multiplicative change in hazard for a one‑unit increase in a covariate</p></li>
 </ul>
-<p>HR=eβ</p>
+<p><strong>Hazard Ratio</strong></p>
+<p>The hazard ratio represents the multiplicative change in the hazard associated with a one‑unit increase in a covariate. Values greater than 1 indicate increased risk, while values less than 1 indicate reduced risk.</p>
+<p><span class="math display">\[HR=eβ\]</span></p>
 <p><strong>Predicted Survival Function</strong></p>
-<p>S^(t∣X)=[S^0(t)]exp⁡(βX)</p>
+<p><span class="math display">\[S\^(t∣X)=\[S\^0(t)\]exp⁡(βX) \]</span></p>
 <ul>
 <li><p>Adjusts baseline survival curve according to patient‑specific covariates</p></li>
 <li><p>Allows individualized survival predictions</p></li>
@@ -1300,6 +1302,7 @@ Victoria Nguyen &amp; Julaxis Love (Advisor: Dr. Cohen)
 <li><p>Race</p></li>
 <li><p>Tumor size</p></li>
 <li><p>Tumor differentiation</p></li>
+<li><p>Estrogen</p></li>
 </ul></li>
 </ul>
 </section>
