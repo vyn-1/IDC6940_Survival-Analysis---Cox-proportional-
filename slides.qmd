@@ -262,6 +262,10 @@ Purpose: Provide the necessary inputs to evaluate how tumor stage
 influences survival while adjusting for key patient and tumor
 characteristics.
 
+Research question: How does tumor stage at diagnosis influence survival time in breast cancer patients?
+
+Hypothesis: Higher tumor stage is associated with significantly worse survival.
+
 ## Data Overview Continued {.smaller}
 
 -   Outcome variables:
