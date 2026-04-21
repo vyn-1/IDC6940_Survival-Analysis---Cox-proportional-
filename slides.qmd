@@ -168,17 +168,21 @@ $$h(t∣X)=h0(t)exp⁡(β1X1+β2X2+⋯+βpXp) $$
 
 -   Represents multiplicative change in hazard for a one‑unit increase
     in a covariate
-    
+
 **Hazard Ratio**
 
-The hazard ratio represents the multiplicative change in the hazard associated with a one‑unit increase in a covariate.
-Values greater than 1 indicate increased risk, while values less than 1 indicate reduced risk.
+The hazard ratio represents the multiplicative change in the hazard
+associated with a one‑unit increase in a covariate. Values greater than
+1 indicate increased risk, while values less than 1 indicate reduced
+risk.
 
 $$HR=eβ$$
 
 **Predicted Survival Function**
 
-$$S\^(t∣X)=\[S\^0(t)\]exp⁡(βX) $$
+$$
+\hat{S}(t \mid X) = \left[\hat{S}_0(t)\right]^{\exp(\beta X)}
+$$
 
 -   Adjusts baseline survival curve according to patient‑specific
     covariates
@@ -262,9 +266,11 @@ Purpose: Provide the necessary inputs to evaluate how tumor stage
 influences survival while adjusting for key patient and tumor
 characteristics.
 
-Research question: How does tumor stage at diagnosis influence survival time in breast cancer patients?
+Research question: How does tumor stage at diagnosis influence survival
+time in breast cancer patients?
 
-Hypothesis: Higher tumor stage is associated with significantly worse survival.
+Hypothesis: Higher tumor stage is associated with significantly worse
+survival.
 
 ## Data Overview Continued {.smaller}
 
@@ -287,9 +293,8 @@ Hypothesis: Higher tumor stage is associated with significantly worse survival.
     -   Tumor size
 
     -   Tumor differentiation
-    
+
     -   Estrogen
-    
 
 ## Analytical Workflow {.smaller}
 
@@ -366,13 +371,16 @@ predictors of breast cancer survival.
 
 ## Interpretation of Findings {.smaller}
 
--   The Cox model did **not** show AJCC tumor stage as a significant independent predictor of survival after adjustment
+-   The Cox model did **not** show AJCC tumor stage as a significant
+    independent predictor of survival after adjustment
 
--   This contrasts with the original hypothesis and suggests that stage’s prognostic effect may be explained by other tumor
-characteristics
+-   This contrasts with the original hypothesis and suggests that
+    stage’s prognostic effect may be explained by other tumor
+    characteristics
 
 -   **Tumor differentiation** was significantly associated with
-survival, with poorer differentiation linked to higher hazard of death
+    survival, with poorer differentiation linked to higher hazard of
+    death
 
 ## Interpretation of Findings Continued {.smaller}
 
