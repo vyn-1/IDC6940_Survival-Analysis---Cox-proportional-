@@ -600,31 +600,20 @@ ggsurvplot(
 
 ## 5. Discussion
 
-The Cox proportional hazards model provided clear evidence that tumor stage at diagnosis is a strong and independent predictor of survival among breast cancer patients.
-After adjusting for age, race, tumor size, tumor differentiation, hormone receptor status, and nodal involvement, higher AJCC 6th edition stage was associated with a significantly increased hazard of death.
-The magnitude and direction of the hazard ratios indicate that as tumor stage progresses, the risk of mortality rises substantially, supporting the study’s hypothesis and aligning with established clinical understanding of disease progression.
-These results demonstrate that tumor stage retains prognostic value even when accounting for multiple demographic and tumor-specific characteristics.
+The purpose of this study was to evaluate whether tumor stage at diagnosis influences survival time among breast cancer patients. Although the hypothesis proposed that higher tumor stage would be associated with significantly worse survival, the multivariable Cox proportional hazards model did not support this expectation. After adjusting for demographic and tumor‑specific characteristics, AJCC stage was not a significant independent predictor of mortality in this cohort. This suggests that the prognostic effect traditionally attributed to stage may be attenuated when other tumor characteristics, such as differentiation and hormone receptor status, are considered simultaneously. 
 
-The significance of additional covariates in the Cox model further highlights the multifactorial nature of breast cancer outcomes.
-Variables such as tumor size, differentiation, and nodal involvement often reflect underlying tumor biology and disease burden, and their associations with increased hazard reinforce their clinical relevance.
-Hormone receptor status, when significant, provides insight into tumor responsiveness to endocrine therapy and contributes to risk stratification.
+Instead, tumor differentiation and estrogen receptor status emerged as the only significant predictors of survival. Poorer differentiation was associated with increased hazard of death, consistent with its role as an indicator of more aggressive tumor biology. Estrogen receptor status also demonstrated a significant association with mortality, highlighting the importance of hormonal pathways in shaping disease behavior and treatment response. These findings underscore that biological features of the tumor may exert a stronger influence on survival than anatomical stage alone, at least within this dataset.
+The lack of significance for age, race, tumor size, and stage does not diminish their clinical relevance but suggests that their effects may be mediated through or overshadowed by other tumor‑specific factors. It is also possible that unmeasured variables, such as treatment type, comorbidities, or socioeconomic factors, contributed to the observed patterns. Importantly, the proportional hazards assumption was satisfied, indicating that the model appropriately captured the relationships between covariates and survival over time.
 
-Importantly, the proportional hazards assumption was satisfied for the final model, indicating that the estimated hazard ratios remained stable over time and that the model appropriately captured the relationship between covariates and survival.
-From a clinical perspective, these findings underscore the critical importance of early detection and accurate staging at diagnosis.
-The strong association between higher tumor stage and increased mortality risk highlights the need for timely screening, diagnostic evaluation, and equitable access to care.
-
-By quantifying the relative impact of stage and other clinical features on survival, the Cox model provides valuable information that can support individualized treatment planning and follow-up strategies.
-Overall, this analysis reinforces the central role of tumor stage in predicting breast cancer survival and demonstrates the utility of the Cox proportional hazards model in evaluating complex clinical datasets.
+Overall, these results highlight the multifactorial nature of breast cancer prognosis. While tumor stage remains a cornerstone of clinical decision‑making, this analysis demonstrates that stage alone may not fully explain survival differences once biological characteristics are taken into account. The findings reinforce the importance of comprehensive tumor profiling and individualized risk assessment in modern oncology. By examining multiple predictors simultaneously, the Cox model provided a nuanced understanding of survival patterns and contributed valuable insight into the complex interplay of clinical and pathological factors in breast cancer outcomes.
 
 # 6. Conclusion
 
-This study used the Cox proportional hazards model to evaluate how tumor stage at diagnosis influences survival among breast cancer patients.
-The results demonstrated that higher AJCC stage is strongly associated with an increased hazard of death, even after adjusting for demographic and tumor‑specific covariates such as age, race, tumor size, differentiation, hormone receptor status, and nodal involvement.
-These findings support the original hypothesis and reinforce the central role of tumor stage as a key prognostic factor in breast cancer survival.
+This study examined whether tumor stage at diagnosis influences survival time among breast cancer patients using a Cox proportional hazards model. Although the original hypothesis proposed that higher tumor stage would be associated with significantly worse survival, the multivariable analysis did not support this expectation. After adjusting for demographic and tumor‑specific characteristics, AJCC stage was not a significant independent predictor of mortality in this cohort. Instead, tumor differentiation and estrogen receptor status emerged as the primary factors associated with survival, suggesting that biological features of the tumor may play a more prominent role than stage alone in determining patient outcomes.
+These findings highlight the complexity of breast cancer prognosis and underscore the importance of evaluating multiple clinical and pathological variables simultaneously. While tumor stage remains a clinically meaningful descriptor of disease extent, its prognostic value may be diminished when other tumor characteristics are taken into account. The results emphasize the need for comprehensive tumor profiling and individualized risk assessment rather than reliance on stage as the sole indicator of survival likelihood.
 
-By quantifying the relative risk associated with each stage and relevant clinical features, the Cox model provided a clear and interpretable framework for understanding how disease severity at diagnosis affects patient outcomes.
-Clinically, these results highlight the importance of early detection, timely diagnosis, and equitable access to screening and treatment services.
-Overall, this analysis contributes to a deeper understanding of survival patterns in breast cancer and underscores the continued value of the Cox proportional hazards model in evaluating complex clinical datasets.
+Overall, this analysis contributes to a more nuanced understanding of survival patterns in breast cancer and demonstrates the utility of the Cox proportional hazards model for evaluating multifactorial clinical datasets. The study also reinforces the importance of continued research into the biological and treatment‑related factors that shape patient outcomes, particularly when traditional predictors such as stage do not behave as expected in adjusted models.
+
 
 ------------------------------------------------------------------------
 
